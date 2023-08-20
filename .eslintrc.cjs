@@ -92,5 +92,12 @@ module.exports = {
         ignorePattern: '^import .*',
       },
     ], // specify the maximum length of a line in your program (off by default)
+    // MUI
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: ['@mui/*/*/*'],
+      },
+    ],
   },
 };
