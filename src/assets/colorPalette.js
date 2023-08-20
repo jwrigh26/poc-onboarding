@@ -16,7 +16,7 @@ export const palette = {
       900: '#483251',
     },
   },
-  neutral: {
+  secondary: {
     light: '#8a8d92',
     main: '#6c757d',
     dark: '#51585e',

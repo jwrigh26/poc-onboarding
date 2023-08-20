@@ -85,6 +85,11 @@ export default function CustomStyles({ children }) {
       <CssBaseline />
       <GlobalStyles
         styles={{
+          'html, body, #root': {
+            width: '100%',
+            margin: 0,
+            padding: 0,
+          },
           '*:focus': {
             outline: 'none',
           },
