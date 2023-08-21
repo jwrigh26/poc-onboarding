@@ -1,6 +1,5 @@
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 
 function App() {
@@ -37,11 +36,11 @@ const AppWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const PageWrapper = styled((props) => (
-  <Stack id="onboarding-main" {...props} />
+  <Stack id="aberdeen-advisory-onboarding-main" {...props} />
 ))(({ theme }) => ({
   flexGrow: 1, // This works based on AppWrapper's flex display
   minHeight: '100svh', // Full viewport height
-  maxWidth: '1280px',
+  maxWidth: theme.breakpoints.values.lg,
   margin: '0 auto',
   backgroundColor: theme.palette.background.paper,
 }));
@@ -61,10 +60,6 @@ const Header = styled((props) => <Box component="header" {...props} />)(
 const Footer = styled((props) => <Box component="footer" {...props} />)(
   ({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
     marginTop: 'auto',
   })
 );

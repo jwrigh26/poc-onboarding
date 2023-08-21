@@ -36,9 +36,11 @@ export default function CustomStyles({ children }) {
         values: {
           xs: 0,
           mobile: 375,
+          mobileLandscape: 480,
           sm: 600,
+          tablet: 768,
           md: 900,
-          lg: 1200,
+          lg: 1280,
           xl: 1536,
         },
       },

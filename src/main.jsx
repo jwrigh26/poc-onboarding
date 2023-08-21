@@ -1,13 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
+import AuthLayout from 'layouts/AuthLayout';
+import MainLayout from 'layouts/MainLayout.jsx';
 import ThemeProvider from 'providers/ThemeProvider';
-import './index.css';
+import './main.css';
+
+const isLoggedIn = true;
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider>
-      <App />
+      {isLoggedIn && <MainLayout />}
+      {!isLoggedIn && <AuthLayout />}
     </ThemeProvider>
   </React.StrictMode>
 );

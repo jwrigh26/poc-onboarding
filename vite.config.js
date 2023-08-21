@@ -29,6 +29,7 @@ export default defineConfig({
       context: path.resolve(__dirname, 'src/context'),
       helpers: path.resolve(__dirname, 'src/helpers'),
       hooks: path.resolve(__dirname, 'src/hooks'),
+      layouts: path.resolve(__dirname, 'src/layouts'),
       models: path.resolve(__dirname, 'src/models'),
       modules: path.resolve(__dirname, 'src/modules'),
       providers: path.resolve(__dirname, 'src/providers'),

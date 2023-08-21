@@ -9,6 +9,7 @@
         "context": ["./context"],
         "helpers": ["./helpers"],
         "hooks": ["./hooks"],
+        "layout": ["./layouts"],
         "models": ["./models"],
         "modules": ["./modules"],
         "providers": ["./providers"],
