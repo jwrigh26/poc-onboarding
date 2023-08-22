@@ -18,10 +18,15 @@ const FooterWrapper = styled((props) => (
   maxWidth: theme.breakpoints.values.lg,
   padding: theme.spacing(1),
   margin: '0 auto',
+  [theme.breakpoints.down('lg')]: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+  },
 }));
 
 const CopyRight = styled((props) => <Typography {...props} />)(({ theme }) => ({
   ...theme.typography.overline,
   display: 'inline-block',
   color: theme.palette.common.white,
+  textWrap: 'balance',
 }));

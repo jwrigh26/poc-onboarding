@@ -46,6 +46,10 @@ const HeaderWrapper = styled((props) => (
   maxWidth: theme.breakpoints.values.lg,
   padding: theme.spacing(1),
   margin: '0 auto',
+  [theme.breakpoints.down('lg')]: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+  },
 }));
 
 const Subtitle = styled((props) => <Typography {...props} />)(({ theme }) => ({
