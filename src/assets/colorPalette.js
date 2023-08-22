@@ -1,17 +1,17 @@
 export const palette = {
   primary: {
-    light: '#a597b7',
-    main: '#8b6ca1',
-    dark: '#6f507a',
+    light: '#8b6ca1', // shifted from previous main
+    main: '#6f507a',  // shifted from previous dark
+    dark: '#573963', // selected from customScale to be pleasing
     customScale: {
       50: '#eae3ec',
       100: '#d0bed4',
       200: '#b399bb',
       300: '#9673a2',
       400: '#7a5d8a',
-      500: '#6f507a',
+      500: '#6f507a', // same as new main
       600: '#634470',
-      700: '#573963',
+      700: '#573963', // same as new dark
       800: '#4a2f56',
       900: '#483251',
     },

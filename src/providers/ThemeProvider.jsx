@@ -55,6 +55,10 @@ export default function CustomStyles({ children }) {
         ...palette,
       },
       shape: {
+        backgroundGradient: {
+          backgroundColor: `rgb(111,80,122)`,
+          background: `linear-gradient(90deg, rgba(111,80,122,1) 0%, rgba(87,57,99,1) 80%)`,
+        },
         borderRadius: 4,
         button: { minWidth: 96 },
       },
@@ -93,6 +97,15 @@ export default function CustomStyles({ children }) {
             padding: 0,
           },
           '*:focus': {
+            outline: 'none',
+          },
+          'button:focus': {
+            outline: 'none',
+          },
+          'a:focus': {
+            outline: 'none',
+          },
+          'input:focus': {
             outline: 'none',
           },
         }}
