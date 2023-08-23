@@ -12,7 +12,7 @@ export default function POC() {
       <POCGrid>
         <Stack>
           <Title>Embark on Precision! Your Financial Future Starts Here.</Title>
-          <Wrapper>
+          <Content>
             <Subtitle>
               Welcome to a journey tailored for accuracy and insight. Our
               onboarding process is designed to align with your unique financial
@@ -21,14 +21,15 @@ export default function POC() {
             </Subtitle>
             <Button
               color="secondary"
+              variant="contained"
               sx={{ width: 'max-content', height: '48px' }}
               endIcon={
-                <EastIcon sx={{ mb: '3px', ml: '4px' }} fontSize="small" />
+                <EastIcon sx={{ mb: '2px', ml: '4px' }} fontSize="small" />
               }
             >
               Get Started
             </Button>
-          </Wrapper>
+          </Content>
         </Stack>
       </POCGrid>
     </Waves>
@@ -75,7 +76,7 @@ const POCGrid = styled((props) => <Box component="main" {...props} />)(
   })
 );
 
-const Wrapper = styled((props) => <Box {...props} />)(({ theme }) => ({
+const Content = styled((props) => <Box {...props} />)(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
   justifyContent: 'flex-start',

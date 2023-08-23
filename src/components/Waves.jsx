@@ -34,7 +34,8 @@ const WaveWrapper = styled((props) => <div {...props} />)(({ theme }) => ({
   width: '100%',
   height: '100%',
   backgroundColor: theme.palette.background.paper,
+  // background: `url(${waves}) no-repeat bottom`,
   background: `
-      linear-gradient(to bottom, rgba(255,255,255, 1) 30%, rgba(255,255,255,0) 100%),
+      linear-gradient(to bottom, rgba(255,255,255, 1) 20%, rgba(255,255,255,0) 100%),
       url(${waves}) no-repeat bottom/cover`,
 }));
