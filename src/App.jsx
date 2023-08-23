@@ -3,6 +3,9 @@ import Box from '@mui/material/Box';
 import FooterContent from 'components/Footer';
 import HeaderContent from 'components/Header';
 import Stack from '@mui/material/Stack';
+import POC from 'modules/POC/POC';
+//
+import ColorPalette from 'components/ColorPalette';
 
 function App() {
   const isLoggedIn = true;
@@ -26,7 +29,8 @@ function App() {
               <HeaderContent />
             </Header>
             <Main>
-              <>{''}</>
+              <POC />
+              {/* <ColorPalette /> */}
             </Main>
             <FooterWrapper>
               <FooterContent />
@@ -54,6 +58,7 @@ const Root = styled(Box)(({ theme }) => ({
 const Main = styled((props) => <Box component="main" {...props} />)(
   ({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
+    flexGrow: 1, // This works based on User Root's flex display
   })
 );
 

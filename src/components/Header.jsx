@@ -9,7 +9,7 @@ export default function Header() {
       <Stack>
         <Typography
           variant="h4"
-          component="h1"
+          component="p"
           sx={{
             color: 'primary.customScale.50',
             textWrap: 'balance',
@@ -52,15 +52,17 @@ const HeaderWrapper = styled((props) => (
   },
 }));
 
-const Subtitle = styled((props) => <Typography {...props} />)(({ theme }) => ({
-  ...theme.typography.caption,
-  paddingLeft: theme.spacing(0.5),
-  display: 'inline-block',
-  textAlign: 'right',
-  color: theme.palette.text.primary,
+const Subtitle = styled((props) => <Typography component="span" {...props} />)(
+  ({ theme }) => ({
+    ...theme.typography.caption,
+    paddingLeft: theme.spacing(0.5),
+    display: 'inline-block',
+    textAlign: 'right',
+    color: theme.palette.text.primary,
 
-  //   [theme.breakpoints.up('sm')]: {
-  //     fontSize: '2rem',
-  //     lineHeight: '2.25rem',
-  //   },
-}));
+    //   [theme.breakpoints.up('sm')]: {
+    //     fontSize: '2rem',
+    //     lineHeight: '2.25rem',
+    //   },
+  })
+);
