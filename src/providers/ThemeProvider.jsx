@@ -121,6 +121,9 @@ const inputGlobalStyles = (
       'input:focus': {
         outline: 'none',
       },
+      // These are the styles for the autofill
+      // They are necessary to override the default styles
+      // That are applied by the browser !!! Super Important !!!
       'input:-internal-autofill-selected': {
         backgroundColor: 'transparent !important',
       },
