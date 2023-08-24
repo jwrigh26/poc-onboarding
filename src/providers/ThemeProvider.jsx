@@ -89,27 +89,7 @@ export default function CustomStyles({ children }) {
   return (
     <>
       <CssBaseline />
-      <GlobalStyles
-        styles={{
-          'html, body, #root': {
-            width: '100%',
-            margin: 0,
-            padding: 0,
-          },
-          '*:focus': {
-            outline: 'none',
-          },
-          'button:focus': {
-            outline: 'none',
-          },
-          'a:focus': {
-            outline: 'none',
-          },
-          'input:focus': {
-            outline: 'none',
-          },
-        }}
-      />
+      {inputGlobalStyles}
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </ColorModeContext.Provider>
@@ -120,3 +100,39 @@ export default function CustomStyles({ children }) {
 CustomStyles.propTypes = {
   children: PropTypes.any,
 };
+
+const inputGlobalStyles = (
+  <GlobalStyles
+    styles={{
+      'html, body, #root': {
+        width: '100%',
+        margin: 0,
+        padding: 0,
+      },
+      '*:focus': {
+        outline: 'none',
+      },
+      'button:focus': {
+        outline: 'none',
+      },
+      'a:focus': {
+        outline: 'none',
+      },
+      'input:focus': {
+        outline: 'none',
+      },
+      'input:-internal-autofill-selected': {
+        backgroundColor: 'transparent !important',
+      },
+      'input:-webkit-autofill': {
+        WebkitBoxShadow: '0 0 0 1000px #fff inset !important',
+        WebkitTextFillColor: '#000 !important',
+        caretColor: '#000 !important',
+      },
+      'input:-webkit-autofill:hover': {
+        WebkitBoxShadow: '0 0 0 1000px #fff inset !important',
+        WebkitTextFillColor: '#000 !important',
+      },
+    }}
+  />
+);

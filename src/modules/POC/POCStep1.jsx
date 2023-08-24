@@ -1,7 +1,9 @@
 import Box from '@mui/material/Box';
 import Button from 'components/Button';
 import PropTypes from 'prop-types';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Textfield from 'components/Textfield';
 
 export default function POCStep1({
   index,
@@ -11,11 +13,15 @@ export default function POCStep1({
 }) {
   return (
     <>
-      <Typography>{description}</Typography>
+      <Stack sx={{ mt: 2, gap: 2 }}>
+        <Textfield id="firstName" label="First Name" />
+        <Textfield id="lastName" label="Last Name" />
+      </Stack>
       <Box sx={{ mb: 2 }}>
         <div>
           <Button
             variant="contained"
+            color="secondary"
             onClick={handleNext}
             sx={{ mt: 1, mr: 1 }}
           >
@@ -40,10 +46,3 @@ POCStep1.propTypes = {
   onNext: PropTypes.func.isRequired,
   totalSteps: PropTypes.number.isRequired,
 };
-
-const description = `
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-    quam sem, suscipit ac tristique at, eleifend in quam. Maecenas ut
-    hendrerit magna, in blandit justo. Vestibulum ante ipsum primis in
-    faucibus orci luctus et ultrices posuere cubilia curae; Nulla ac
-    feugiat quam.`;
