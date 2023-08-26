@@ -1,8 +1,36 @@
 import { alpha, styled } from '@mui/material/styles';
 import { hasValue } from '../../helpers/utils';
+import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import InputBase from '@mui/material/InputBase';
 import InputLabel from '@mui/material/InputLabel';
+import Typography from '@mui/material/Typography';
+
+export const StyledErrorText = styled((props) => (
+  <Typography variant="caption" {...props} />
+))(({ theme }) => ({
+  color: theme.palette.error.main,
+  marginTop: theme.spacing(1),
+  marginLeft: theme.spacing(1),
+  height: '20px',
+}));
+
+export const StyledHintText = styled((props) => (
+  <Typography variant="caption" {...props} />
+))(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  marginTop: theme.spacing(1),
+  marginLeft: theme.spacing(1),
+  height: '20px',
+}));
+
+export const StyledGutter = styled((props) => <Box {...props} />)(
+  ({ theme }) => ({
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    height: '20px',
+  })
+);
 
 export const StyledFormControl = styled((props) => (
   <FormControl variant="standard" {...props} />
@@ -38,7 +66,7 @@ export const StyledInput = styled((props) => (
   // defaultValue="react-bootstrap"
   // component to disable autocomplete
   <InputBase {...props} />
-))(({ theme, fullWidth, width }) => ({
+))(({ theme, width, fullWidth = true }) => ({
   'label + &': {
     marginTop: theme.spacing(3),
   },

@@ -1,4 +1,11 @@
-import { StyledInput, StyledInputLabel, StyledFormControl } from './Styles';
+import { hasValue } from 'helpers/utils';
+import {
+  StyledInput,
+  StyledInputLabel,
+  StyledFormControl,
+  StyledErrorText,
+  StyledHintText,
+} from './Styles';
 import { NumericFormat, PatternFormat } from 'react-number-format';
 import PropTypes from 'prop-types';
 
@@ -10,9 +17,18 @@ import PropTypes from 'prop-types';
  * @param {string} props.id - Unique ID for the input
  * @param {string} props.label - Label text for the input
  * @param {string} props.formatType - Type of number format ('currency', 'integer', 'float')
+ * @param {string} props.error - Error text to display
+ * @param {string} props.hint - Hint text to display
  * @returns {JSX.Element} A formatted input field based on the specified number format.
  */
-export default function NumberTextfield({ id, label, formatType, ...props }) {
+export default function NumberTextfield({
+  id,
+  label,
+  formatType,
+  error,
+  hint,
+  ...props
+}) {
   // Custom props for NumericFormat  based on formatType
   let formatProps = {};
   let isPattern = false;
@@ -80,6 +96,8 @@ export default function NumberTextfield({ id, label, formatType, ...props }) {
           {...props}
         />
       )}
+      {error && <StyledErrorText>{error}</StyledErrorText>}
+      {hint && !hasValue(error) && <StyledHintText>{hint}</StyledHintText>}
     </StyledFormControl>
   );
 }
@@ -94,6 +112,8 @@ NumberTextfield.propTypes = {
     'percent',
     'phone',
   ]).isRequired,
+  error: PropTypes.string,
+  hint: PropTypes.string,
 };
 
 // ... Your existing StyledInputLabel and BootstrapInput styled components remain unchanged
