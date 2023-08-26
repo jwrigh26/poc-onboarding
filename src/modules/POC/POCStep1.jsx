@@ -14,8 +14,12 @@ export default function POCStep1({
   return (
     <>
       <Stack sx={{ mt: 2, gap: 2 }}>
-        <Textfield id="firstName" label="First Name" />
-        <Textfield id="lastName" label="Last Name" />
+        <Textfield id="firstName" label="First Name" defaultValue="Warbo" />
+        <Textfield
+          id="lastName"
+          label="Last Name"
+          defaultValue="react-bootstrap"
+        />
         <NumberTextfield id="amount" label="Amount" formatType="phone" />
       </Stack>
       <Box sx={{ mb: 2 }}>

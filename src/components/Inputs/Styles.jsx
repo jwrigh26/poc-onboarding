@@ -1,4 +1,5 @@
 import { alpha, styled } from '@mui/material/styles';
+import { hasValue } from '../../helpers/utils';
 import FormControl from '@mui/material/FormControl';
 import InputBase from '@mui/material/InputBase';
 import InputLabel from '@mui/material/InputLabel';
@@ -37,7 +38,7 @@ export const StyledInput = styled((props) => (
   // defaultValue="react-bootstrap"
   // component to disable autocomplete
   <InputBase {...props} />
-))(({ theme }) => ({
+))(({ theme, fullWidth, width }) => ({
   'label + &': {
     marginTop: theme.spacing(3),
   },
@@ -50,7 +51,7 @@ export const StyledInput = styled((props) => (
     borderColor: theme.palette.primary.main,
     // borderColor: theme.palette.mode === 'light' ? '#E0E3E7' : '#2D3843',
     fontSize: 16,
-    width: 'auto',
+    width: fullWidth ? '100%' : hasValue(width) ? width : 'auto',
     padding: theme.spacing(1),
     'input:-internal-autofill-selected': {
       backgroundColor: theme.palette.background.paper,
