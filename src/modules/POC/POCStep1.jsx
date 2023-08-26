@@ -2,8 +2,8 @@ import Box from '@mui/material/Box';
 import Button from 'components/Button';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Textfield from 'components/Textfield';
+import Textfield from 'components/Inputs/Textfield';
+import NumberTextfield from 'components/Inputs/NumberTextfield';
 
 export default function POCStep1({
   index,
@@ -16,6 +16,7 @@ export default function POCStep1({
       <Stack sx={{ mt: 2, gap: 2 }}>
         <Textfield id="firstName" label="First Name" />
         <Textfield id="lastName" label="Last Name" />
+        <NumberTextfield id="amount" label="Amount" formatType="phone" />
       </Stack>
       <Box sx={{ mb: 2 }}>
         <div>
