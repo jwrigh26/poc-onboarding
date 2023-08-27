@@ -14,19 +14,27 @@ import PropTypes from 'prop-types';
  * different number formatting options such as currency, integer and float.
  *
  * @param {Object} props - Props passed down from parent component
- * @param {string} props.id - Unique ID for the input
- * @param {string} props.label - Label text for the input
- * @param {string} props.formatType - Type of number format ('currency', 'integer', 'float')
  * @param {string} props.error - Error text to display
+ * @param {string} props.formatType - Type of number format ('currency', 'integer', 'float')
+ * @param {boolean} [props.gutter] - Whether to display a gutter below the text field.
  * @param {string} props.hint - Hint text to display
+ * @param {string} props.id - Unique ID for the input
+ * @param {function} props.inputRef - Ref for the input
+ * @param {string} props.label - Label text for the input
+ * @param {function} [props.onBlur] - Blur event handler for the input
+ * @param {function} [props.onChange] - Change event handler for the input
+ * @param {boolean} [props.required] - Whether the input is required
  * @returns {JSX.Element} A formatted input field based on the specified number format.
  */
 export default function NumberTextfield({
-  id,
-  label,
-  formatType,
   error,
+  formatType,
+  gutter,
   hint,
+  id,
+  inputRef: ref,
+  label,
+  required: isRequired,
   ...props
 }) {
   // Custom props for NumericFormat  based on formatType
@@ -77,13 +85,17 @@ export default function NumberTextfield({
 
   return (
     <StyledFormControl>
-      <StyledInputLabel shrink htmlFor={id}>
+      <StyledInputLabel required={isRequired} shrink htmlFor={id}>
         {label}
       </StyledInputLabel>
       {isPattern && (
         <PatternFormat
           customInput={StyledInput}
           id={id}
+          inputProps={{
+            maxLength: props?.maxLength > 0 ? props.maxLength : null,
+          }}
+          inputRef={ref}
           {...formatProps}
           {...props}
         />
@@ -92,19 +104,25 @@ export default function NumberTextfield({
         <NumericFormat
           customInput={StyledInput}
           id={id}
+          inputProps={{
+            maxLength: props?.maxLength > 0 ? props.maxLength : null,
+          }}
+          inputRef={ref}
           {...formatProps}
           {...props}
         />
       )}
       {error && <StyledErrorText>{error}</StyledErrorText>}
       {hint && !hasValue(error) && <StyledHintText>{hint}</StyledHintText>}
+      {gutter && !hasValue(error) && !hasValue(hint) && (
+        <StyledHintText>&nbsp;</StyledHintText>
+      )}
     </StyledFormControl>
   );
 }
 
 NumberTextfield.propTypes = {
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  error: PropTypes.string,
   formatType: PropTypes.oneOf([
     'currency',
     'integer',
@@ -112,8 +130,11 @@ NumberTextfield.propTypes = {
     'percent',
     'phone',
   ]).isRequired,
-  error: PropTypes.string,
+  gutter: PropTypes.bool,
   hint: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  inputRef: PropTypes.any.isRequired,
+  label: PropTypes.string.isRequired,
+  onBlur: PropTypes.func,
+  onChange: PropTypes.func,
 };
-
-// ... Your existing StyledInputLabel and BootstrapInput styled components remain unchanged
