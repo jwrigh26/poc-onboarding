@@ -1,91 +1,77 @@
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { useState } from 'react';
+import {
+  Grid,
+  Main,
+  Leading,
+  Trailing,
+  StartTitle,
+  StartSubtitle,
+  StartGrid,
+  StartContentWrapper,
+} from './Styles';
 import Button from 'components/Button';
 import Stack from '@mui/material/Stack';
 import Waves from 'components/Waves';
-import Typography from '@mui/material/Typography';
 import EastIcon from '@mui/icons-material/East';
+import Wizard from 'components/Wizard/Wizard';
+import WizzardProvider from 'providers/WizzardProvider';
+
+// Steps
+import Personal from './steps/Personal';
+import Address from './steps/Address';
+import Contact from './steps/Contact';
+
+const steps = new Map([
+  [0, { label: 'Personal', Element: Personal, error: false }],
+  [1, { label: 'Address', Element: Address, error: false }],
+  [2, { label: 'Contact', Element: Contact, error: false }],
+]);
 
 export default function POC() {
+  const [started, setStarted] = useState(true);
   return (
-    <Waves>
-      <POCGrid>
-        <Stack>
-          <Title>Embark on Precision! Your Financial Future Starts Here.</Title>
-          <Content>
-            <Subtitle>
-              Welcome to a journey tailored for accuracy and insight. Our
-              onboarding process is designed to align with your unique financial
-              goals, ensuring a clear path to success. Let's make numbers tell
-              your story!
-            </Subtitle>
-            <Button
-              color="secondary"
-              variant="contained"
-              sx={{ width: 'max-content', height: '48px' }}
-              endIcon={
-                <EastIcon sx={{ mb: '2px', ml: '4px' }} fontSize="small" />
-              }
-            >
-              Get Started
-            </Button>
-          </Content>
-        </Stack>
-      </POCGrid>
-    </Waves>
+    <>
+      {!started && (
+        <Waves>
+          <StartGrid>
+            <Stack>
+              <StartTitle>
+                Embark on Precision! Your Financial Future Starts Here.
+              </StartTitle>
+              <StartContentWrapper>
+                <StartSubtitle>
+                  Welcome to a journey tailored for accuracy and insight. Our
+                  onboarding process is designed to align with your unique
+                  financial goals, ensuring a clear path to success. Let's make
+                  numbers tell your story!
+                </StartSubtitle>
+                <Button
+                  color="secondary"
+                  endIcon={
+                    <EastIcon sx={{ mb: '2px', ml: '4px' }} fontSize="small" />
+                  }
+                  onClick={() => setStarted(true)}
+                  sx={{ width: 'max-content', height: '48px' }}
+                  variant="contained"
+                >
+                  Get Started
+                </Button>
+              </StartContentWrapper>
+            </Stack>
+          </StartGrid>
+        </Waves>
+      )}
+      {started && (
+        <WizzardProvider steps={steps}>
+          <Grid>
+            <Main>
+              <Wizard />
+            </Main>
+            <Leading />
+            <Trailing />
+          </Grid>
+        </WizzardProvider>
+      )}
+    </>
   );
 }
-
-const Title = styled((props) => (
-  <Typography gutterBottom variant="h1" {...props} />
-))(({ theme }) => ({
-  fontWeight: theme.typography.fontWeightBold,
-  color: theme.palette.text.primary,
-  textWrap: 'balance',
-}));
-
-const Subtitle = styled((props) => (
-  <Typography variant="body1" component="span" {...props} />
-))(({ theme }) => ({
-  color: theme.palette.text.primary,
-  fontWeight: theme.typography.fontWeightMedium,
-  paddingLeft: theme.spacing(0),
-  paddingRight: theme.spacing(0),
-  flex: 1,
-  [theme.breakpoints.up('lg')]: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-  },
-}));
-
-const POCGrid = styled((props) => <Box component="main" {...props} />)(
-  ({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    maxWidth: theme.breakpoints.values.lg,
-    margin: '0 auto',
-    paddingLeft: theme.spacing(8),
-    paddingRight: theme.spacing(8),
-    [theme.breakpoints.up('lg')]: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-  })
-);
-
-const Content = styled((props) => <Box {...props} />)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'flex-start',
-  flexDirection: 'column',
-  gap: theme.spacing(4),
-  maxWidth: theme.breakpoints.values.md,
-  [theme.breakpoints.up('lg')]: {
-    marginTop: theme.spacing(2),
-    gap: theme.spacing(8),
-    flexDirection: 'row',
-  },
-}));

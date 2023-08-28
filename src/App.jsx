@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import FooterContent from 'components/Footer';
 import HeaderContent from 'components/Header';
 import Stack from '@mui/material/Stack';
-import POCWizzard from 'modules/POC/POCWizzard';
+import POC from 'modules/POC/POC';
 //
 import ColorPalette from 'components/ColorPalette';
 
@@ -29,7 +29,7 @@ function App() {
               <HeaderContent />
             </Header>
             <Main>
-              <POCWizzard />
+              <POC />
               {/* <ColorPalette /> */}
             </Main>
             <FooterWrapper>

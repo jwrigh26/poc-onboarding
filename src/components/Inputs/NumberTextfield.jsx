@@ -1,10 +1,10 @@
 import { hasValue } from 'helpers/utils';
 import {
-  StyledInput,
-  StyledInputLabel,
-  StyledFormControl,
-  StyledErrorText,
-  StyledHintText,
+  InputField,
+  InputName,
+  InputWrapper,
+  InputErrorText,
+  InputHintText,
 } from './Styles';
 import { NumericFormat, PatternFormat } from 'react-number-format';
 import PropTypes from 'prop-types';
@@ -84,13 +84,13 @@ export default function NumberTextfield({
   }
 
   return (
-    <StyledFormControl>
-      <StyledInputLabel required={isRequired} shrink htmlFor={id}>
+    <InputWrapper>
+      <InputName required={isRequired} shrink htmlFor={id}>
         {label}
-      </StyledInputLabel>
+      </InputName>
       {isPattern && (
         <PatternFormat
-          customInput={StyledInput}
+          customInput={InputField}
           id={id}
           inputProps={{
             maxLength: props?.maxLength > 0 ? props.maxLength : null,
@@ -102,7 +102,7 @@ export default function NumberTextfield({
       )}
       {!isPattern && (
         <NumericFormat
-          customInput={StyledInput}
+          customInput={InputField}
           id={id}
           inputProps={{
             maxLength: props?.maxLength > 0 ? props.maxLength : null,
@@ -112,12 +112,12 @@ export default function NumberTextfield({
           {...props}
         />
       )}
-      {error && <StyledErrorText>{error}</StyledErrorText>}
-      {hint && !hasValue(error) && <StyledHintText>{hint}</StyledHintText>}
+      {error && <InputErrorText>{error}</InputErrorText>}
+      {hint && !hasValue(error) && <InputHintText>{hint}</InputHintText>}
       {gutter && !hasValue(error) && !hasValue(hint) && (
-        <StyledHintText>&nbsp;</StyledHintText>
+        <InputHintText>&nbsp;</InputHintText>
       )}
-    </StyledFormControl>
+    </InputWrapper>
   );
 }
 

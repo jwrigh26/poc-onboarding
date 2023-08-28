@@ -1,11 +1,10 @@
 import { hasValue } from 'helpers/utils';
 import {
-  StyledInput,
-  StyledInputLabel,
-  StyledFormControl,
-  StyledErrorText,
-  StyledHintText,
-  StyledGutter,
+  InputField,
+  InputName,
+  InputWrapper,
+  InputErrorText,
+  InputHintText,
 } from './Styles';
 import PropTypes from 'prop-types';
 
@@ -36,11 +35,11 @@ export default function Textfield({
   ...props
 }) {
   return (
-    <StyledFormControl>
-      <StyledInputLabel required={isRequired} shrink htmlFor={id}>
+    <InputWrapper>
+      <InputName required={isRequired} shrink htmlFor={id}>
         {label}
-      </StyledInputLabel>
-      <StyledInput
+      </InputName>
+      <InputField
         id={id}
         inputProps={{
           maxLength: props?.maxLength > 0 ? props.maxLength : null,
@@ -51,12 +50,12 @@ export default function Textfield({
         onChange={handleChange}
         {...props}
       />
-      {error && <StyledErrorText>{error}</StyledErrorText>}
-      {hint && !hasValue(error) && <StyledHintText>{hint}</StyledHintText>}
+      {error && <InputErrorText>{error}</InputErrorText>}
+      {hint && !hasValue(error) && <InputHintText>{hint}</InputHintText>}
       {gutter && !hasValue(error) && !hasValue(hint) && (
-        <StyledHintText>&nbsp;</StyledHintText>
+        <InputHintText>&nbsp;</InputHintText>
       )}
-    </StyledFormControl>
+    </InputWrapper>
   );
 }
 

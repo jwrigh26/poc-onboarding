@@ -6,7 +6,7 @@ import InputBase from '@mui/material/InputBase';
 import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 
-export const StyledErrorText = styled((props) => (
+export const InputErrorText = styled((props) => (
   <Typography variant="caption" {...props} />
 ))(({ theme }) => ({
   color: theme.palette.error.main,
@@ -15,7 +15,7 @@ export const StyledErrorText = styled((props) => (
   height: '20px',
 }));
 
-export const StyledHintText = styled((props) => (
+export const InputHintText = styled((props) => (
   <Typography variant="caption" {...props} />
 ))(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -24,7 +24,7 @@ export const StyledHintText = styled((props) => (
   height: '20px',
 }));
 
-export const StyledGutter = styled((props) => <Box {...props} />)(
+export const InputGutter = styled((props) => <Box {...props} />)(
   ({ theme }) => ({
     marginTop: theme.spacing(1),
     marginLeft: theme.spacing(1),
@@ -32,7 +32,7 @@ export const StyledGutter = styled((props) => <Box {...props} />)(
   })
 );
 
-export const StyledFormControl = styled((props) => (
+export const InputWrapper = styled((props) => (
   <FormControl variant="standard" {...props} />
 ))(({ theme }) => ({
   //   '& .MuiFormLabel-root': {
@@ -49,7 +49,7 @@ export const StyledFormControl = styled((props) => (
   //   },
 }));
 
-export const StyledInputLabel = styled((props) => <InputLabel {...props} />)(
+export const InputName = styled((props) => <InputLabel {...props} />)(
   ({ theme }) => ({
     ...theme.typography.subtitle1,
     fontWeight: theme.typography.fontWeightMedium,
@@ -61,7 +61,7 @@ export const StyledInputLabel = styled((props) => <InputLabel {...props} />)(
 );
 
 // BootstrapInput is styled after the old Bootstrap 3.x form elements
-export const StyledInput = styled((props) => (
+export const InputField = styled((props) => (
   // If desired we can pass inputProps={{ autoComplete: 'off' }} to the InputBase
   // defaultValue="react-bootstrap"
   // component to disable autocomplete

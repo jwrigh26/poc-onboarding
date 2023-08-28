@@ -15,35 +15,24 @@ const ACTION_TYPES = {
   RESET: 'reset',
   COMPLETE: 'complete',
   UNCOMPLETE: 'uncomplete',
+  ERROR: 'error',
 };
 
-const POCWizzardContext = createContext();
+const WizzardContext = createContext();
 
-export function usePOCWizzardContext() {
-  return useContext(POCWizzardContext);
-}
-
-const POCWizzardActionsContext = createContext();
-
-export function usePOCWizzardActionsContext() {
-  return useContext(POCWizzardActionsContext);
-}
-
-const POCWizzardMetaContext = createContext();
-
-export function usePOCWizzardMetaContext() {
-  return useContext(POCWizzardMetaContext);
+export function useWizzardContext() {
+  return useContext(WizzardContext);
 }
 
 const initialState = {
   activeStep: 0,
-  steps: [],
-  completed: {}, // { 0: true, 1: true, 2: true, 3: true, 4: true }
+  steps: new Map(),
+  completed: {}, // {[0, { label: 'Personal', Element: Personal, error: null, }],...}
 };
 
 const reducer = (state, action) => {
   const totalSteps = () => {
-    return state.steps.length;
+    return state.steps.size;
   };
 
   const completedSteps = () => {
@@ -58,6 +47,34 @@ const reducer = (state, action) => {
     return completedSteps() === totalSteps();
   };
 
+  if (action.type === ACTION_TYPES.ERROR) {
+    // Create a shallow copy of the existing Map
+    const newSteps = new Map(state.steps);
+
+    // Get the existing value for the given key
+    const stepToUpdate = newSteps.get(state.activeStep);
+
+    // Create a new object by shallow-copying all properties and updating the 'error' field
+    const updatedStep = { ...stepToUpdate };
+    // Check if not a boolean
+    if (typeof action.payload !== 'boolean') {
+      throw new Error(
+        `Error must be a boolean value. Received: ${typeof action.payload}`
+      );
+    }
+    // Update error bool value
+    updatedStep.error = action.payload;
+
+    // Set the new object back into the Map
+    newSteps.set(state.activeStep, updatedStep);
+
+    // Update the state
+    return {
+      ...state,
+      steps: newSteps,
+    };
+  }
+
   if (action.type === ACTION_TYPES.ACTIVE_STEP) {
     return {
       ...state,
@@ -66,11 +83,13 @@ const reducer = (state, action) => {
   }
 
   if (action.type === ACTION_TYPES.NEXT) {
+    // It's the last step, but not all steps have been completed,
+    // find the first step that has been completed
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          state.steps.findIndex((step, i) => !(i in state.completed))
+        ? Array.from(state.steps.keys()).find(
+            (key) => !(key in state.completed)
+          )
         : state.activeStep + 1;
 
     return {
@@ -109,12 +128,15 @@ const reducer = (state, action) => {
   return state;
 };
 
-export default function POCWizzardProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+export default function WizzardProvider({ children, steps: initialSteps }) {
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    steps: initialSteps ?? new Map(),
+  });
 
   const totalSteps = useMemo(() => {
-    return state.steps.length;
-  }, [state.steps.length]);
+    return state.steps.size;
+  }, [state.steps.size]);
 
   const completedSteps = useMemo(() => {
     return Object.keys(state.completed).length;
@@ -152,6 +174,14 @@ export default function POCWizzardProvider({ children }) {
     dispatch({ type: ACTION_TYPES.RESET });
   }, []);
 
+  const setError = useCallback(() => {
+    dispatch({ type: ACTION_TYPES.ERROR, payload: true });
+  }, []);
+
+  const clearError = useCallback(() => {
+    dispatch({ type: ACTION_TYPES.ERROR, payload: false });
+  }, []);
+
   const value = {
     state,
     actions: {
@@ -161,6 +191,8 @@ export default function POCWizzardProvider({ children }) {
       handleComplete,
       handleUncomplete,
       handleReset,
+      setError,
+      clearError,
     },
     meta: {
       totalSteps,
@@ -171,12 +203,11 @@ export default function POCWizzardProvider({ children }) {
   };
 
   return (
-    <POCWizzardContext.Provider value={value}>
-      {children}
-    </POCWizzardContext.Provider>
+    <WizzardContext.Provider value={value}>{children}</WizzardContext.Provider>
   );
 }
 
-POCWizzardProvider.propTypes = {
+WizzardProvider.propTypes = {
   children: PropTypes.node.isRequired,
+  steps: PropTypes.instanceOf(Map),
 };
