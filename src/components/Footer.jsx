@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 export default function Footer() {
   return (
     <FooterWrapper>
-      <CopyRight>&copy; 2023 Aberdeen Advisory. All rights reserved.</CopyRight>
+      <CopyRight>&copy; 2023 POC Onboarding. All rights reserved.</CopyRight>
     </FooterWrapper>
   );
 }

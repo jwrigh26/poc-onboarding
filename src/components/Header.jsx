@@ -20,7 +20,7 @@ export default function Header() {
         >
           Onboarding
         </Typography>
-        <Subtitle>Aberdeen Advisory</Subtitle>
+        <Subtitle>Because it's cool</Subtitle>
       </Stack>
       <Avatar
         sx={{

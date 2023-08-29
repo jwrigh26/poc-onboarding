@@ -1,6 +1,6 @@
-# License for Aberdeen Advisory Onboarding
+# License for POC Onboarding
 
-Copyright (c) 2023, Aberdeen Advisory
+Copyright (c) 2023, POC Onboarding
 
 All rights reserved.
 

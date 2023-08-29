@@ -77,14 +77,14 @@ const FooterWrapper = styled((props) => <Box component="footer" {...props} />)(
 );
 
 // Auth Styled Components
-const Auth = styled((props) => (
-  <Stack id="aberdeen-advisory-onboarding-auth" {...props} />
-))(({ theme }) => ({
-  flexGrow: 1, // This works based on AppWrapper's flex display
-  minHeight: '100svh', // Full viewport height
-  maxWidth: theme.breakpoints.values.lg,
-  margin: '0 auto',
-}));
+const Auth = styled((props) => <Stack id="onboarding-auth" {...props} />)(
+  ({ theme }) => ({
+    flexGrow: 1, // This works based on AppWrapper's flex display
+    minHeight: '100svh', // Full viewport height
+    maxWidth: theme.breakpoints.values.lg,
+    margin: '0 auto',
+  })
+);
 
 const AuthGrid = styled((props) => <Box component="main" {...props} />)(() => ({
   display: 'grid',
@@ -118,14 +118,14 @@ const Trailing = styled(FullHeightFlexCenter)(({ theme }) => ({
 }));
 
 // User Styled Components
-const User = styled((props) => (
-  <Stack id="aberdeen-advisory-onboarding-main" {...props} />
-))(({ theme }) => ({
-  flexGrow: 1, // This works based on User Root's flex display
-  minHeight: '100svh', // Full viewport height
+const User = styled((props) => <Stack id="onboarding-main" {...props} />)(
+  ({ theme }) => ({
+    flexGrow: 1, // This works based on User Root's flex display
+    minHeight: '100svh', // Full viewport height
 
-  margin: '0 auto',
-  backgroundColor: theme.palette.background.paper,
-}));
+    margin: '0 auto',
+    backgroundColor: theme.palette.background.paper,
+  })
+);
 
 // Admin Styled Components
