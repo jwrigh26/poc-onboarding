@@ -1,7 +1,6 @@
-import React from 'react';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import LoadingButton from '@mui/lab/LoadingButton';
-import useTheme from '@mui/material/styles/useTheme';
 
 export default function Button({
   children,
@@ -13,20 +12,22 @@ export default function Button({
 }) {
   const theme = useTheme();
 
+  console.log('theme', props.color);
+
   return (
-    <LoadingButton
+    <StyledLoadingButton
       disableRipple
       disableFocusRipple
       disableTouchRipple
       disableElevation
       loading={loading}
-      variant={variant}
-      sx={{ ...theme.shape.button, ...sx }}
       loadingPosition={loadingPosition}
+      sx={{ ...theme.shape.button, ...sx }}
+      variant={variant}
       {...props}
     >
       {children}
-    </LoadingButton>
+    </StyledLoadingButton>
   );
 }
 
@@ -43,3 +44,39 @@ Button.propTypes = {
     PropTypes.object,
   ]),
 };
+
+const StyledLoadingButton = styled(LoadingButton)(({ theme, color }) => {
+  const mainColor = color
+    ? theme.palette[color].main
+    : theme.palette.primary.main;
+  const darkColor = color
+    ? theme.palette[color].dark
+    : theme.palette.primary.dark;
+  return {
+    transition: theme.transitions.create(
+      ['border-color', 'background-color', 'box-shadow'],
+      { duration: theme.transitions.duration.shorter }
+    ),
+    '&:focus-visible': {
+      boxShadow: `${alpha(mainColor, 0.25)} 0 0 0 0.2rem`,
+      borderColor: mainColor,
+      backgroundColor: darkColor,
+    },
+    '&:active': {
+      boxShadow: 'none',
+      borderColor: 'none',
+      backgroundColor: mainColor,
+    },
+    // Not currently being used. Leaving as a reference.
+    // '&:hodver': {
+    // boxShadow: 'none',
+    // borderColor: 'none',
+    // backgroundColor: darkColor,
+    // },
+    // '&:focus:not(:focus-visible)': {
+    //   boxShadow: 'none',
+    //   borderColor: 'none',
+    //   backgroundColor: mainColor,
+    // },
+  };
+});

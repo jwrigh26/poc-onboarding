@@ -1,11 +1,15 @@
+import { useRef, useState } from 'react';
 import { hasValue } from 'helpers/utils';
+import { useTheme } from '@mui/material/styles';
 import {
+  ErrorTransitionWrapper,
   InputField,
   InputName,
   InputWrapper,
   InputErrorText,
   InputHintText,
 } from './Styles';
+import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 
 /**
@@ -23,6 +27,7 @@ import PropTypes from 'prop-types';
  * @returns {JSX.Element} - The text field component.
  */
 export default function Textfield({
+  animateError = true,
   error,
   gutter,
   hint,
@@ -34,32 +39,66 @@ export default function Textfield({
   required: isRequired,
   ...props
 }) {
+  const theme = useTheme();
+  const errorRef = useRef();
+  const [prevError, setPrevError] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  // Double nested an ugly but it works.
+  // And it's only called when the error changes.
+  // Leaving it like this for readability.
+  if (!!error !== prevError) {
+    setPrevError(!!error);
+    if (!!error) {
+      console.log('Show error', !!error, 'prv', prevError);
+      setShowError(true);
+    }
+  }
+
   return (
-    <InputWrapper>
-      <InputName required={isRequired} shrink htmlFor={id}>
-        {label}
-      </InputName>
-      <InputField
-        id={id}
-        inputProps={{
-          maxLength: props?.maxLength > 0 ? props.maxLength : null,
-        }}
-        inputRef={ref}
-        name={label}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        {...props}
-      />
-      {error && <InputErrorText>{error}</InputErrorText>}
-      {hint && !hasValue(error) && <InputHintText>{hint}</InputHintText>}
-      {gutter && !hasValue(error) && !hasValue(hint) && (
-        <InputHintText>&nbsp;</InputHintText>
-      )}
-    </InputWrapper>
+    <CSSTransition
+      in={!!error}
+      timeout={theme.transitions.duration.shorter}
+      classNames="error-text"
+      nodeRef={errorRef}
+      onExited={() => {
+        setShowError(false);
+      }}
+    >
+      <InputWrapper>
+        <InputName required={isRequired} shrink htmlFor={id}>
+          {label}
+        </InputName>
+        <InputField
+          id={id}
+          inputProps={{
+            maxLength: props?.maxLength > 0 ? props.maxLength : null,
+          }}
+          inputRef={ref}
+          name={label}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          {...props}
+        />
+        {/* If no animation is needed this will show an error right away. */}
+        {!animateError && error && <InputErrorText>{error}</InputErrorText>}
+        {animateError && showError && (
+          <ErrorTransitionWrapper ref={errorRef}>
+            <InputErrorText>{error}</InputErrorText>
+          </ErrorTransitionWrapper>
+        )}
+        {hint && !hasValue(error) && <InputHintText>{hint}</InputHintText>}
+        {/* Propbably don't want this if we are animating errors. */}
+        {gutter && !hasValue(error) && !hasValue(hint) && (
+          <InputHintText>&nbsp;</InputHintText>
+        )}
+      </InputWrapper>
+    </CSSTransition>
   );
 }
 
 Textfield.propTypes = {
+  animateError: PropTypes.bool,
   error: PropTypes.string,
   gutter: PropTypes.bool,
   hint: PropTypes.string,

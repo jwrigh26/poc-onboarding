@@ -1,4 +1,5 @@
 import { createContext, useMemo, useState } from 'react';
+import { alpha } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import PropTypes from 'prop-types';

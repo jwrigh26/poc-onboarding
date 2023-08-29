@@ -6,13 +6,38 @@ import InputBase from '@mui/material/InputBase';
 import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 
+export const ErrorTransitionWrapper = styled('div')(({ theme }) => ({
+  overflow: 'hidden',
+  '&.error-text-enter': {
+    display: 'block',
+    opacity: 0,
+    maxHeight: '0px',
+  },
+
+  '&.error-text-enter-active': {
+    opacity: 1,
+    maxHeight: '24px',
+    transition: `opacity ${theme.transitions.duration.shorter}ms ease-in, max-height ${theme.transitions.duration.shorter}ms ease-in`,
+  },
+
+  '&.error-text-exit': {
+    opacity: 1,
+    maxHeight: '24px',
+  },
+
+  '&.error-text-exit-active': {
+    opacity: 0,
+    maxHeight: '0px',
+    transition: `opacity ${theme.transitions.duration.shorter}ms ease-out, max-height ${theme.transitions.duration.shorter}ms ease-out`,
+  },
+}));
+
 export const InputErrorText = styled((props) => (
   <Typography variant="caption" {...props} />
 ))(({ theme }) => ({
   color: theme.palette.error.main,
   marginTop: theme.spacing(1),
   marginLeft: theme.spacing(1),
-  height: '20px',
 }));
 
 export const InputHintText = styled((props) => (
@@ -21,14 +46,13 @@ export const InputHintText = styled((props) => (
   color: theme.palette.text.secondary,
   marginTop: theme.spacing(1),
   marginLeft: theme.spacing(1),
-  height: '20px',
 }));
 
 export const InputGutter = styled((props) => <Box {...props} />)(
   ({ theme }) => ({
     marginTop: theme.spacing(1),
     marginLeft: theme.spacing(1),
-    height: '20px',
+    height: '24px',
   })
 );
 

@@ -1,5 +1,6 @@
 import { hasValue, isString } from 'helpers/utils';
 import { useCallback, useRef, useState } from 'react';
+import { useDebounce } from 'hooks/useDebounce';
 import { useWizzardContext } from 'providers/WizzardProvider';
 import Box from '@mui/material/Box';
 import Button from 'components/Button';
@@ -160,13 +161,13 @@ const useInputValidation = () => {
  * @param {Object} ref
  * @returns {Object} { disabled, getError, handleBlur, handleChange, validate }
  */
-let prevSubmit = false;
 const useInputHandler = (ids, ref) => {
   const { inputValidation } = useInputValidation();
+  const { actions } = useWizzardContext();
+  // Object of errors to track
   const [errors, setError] = useState(null);
   // Object to track if an input has been dirtied
   const [dirty, setDirty] = useState({});
-  const { actions } = useWizzardContext();
 
   const getError = (id) => {
     return errors?.[id] || null;
@@ -192,9 +193,12 @@ const useInputHandler = (ids, ref) => {
   // We return !allInputsValid because we want to disable the button if the form is not valid
   const [allInputsValid, setAllInputValid] = useState(validate());
 
-  const handleInput = (event, id) => {
-    event.preventDefault();
-    const value = event.target.value; //  inputRef.current[id]?.value is another way but this is more readable
+  const handleInput = (event) => {
+    console.log({ event: event.target?.value });
+    // event.preventDefault();
+    const id = event.target?.id;
+    const value = event.target?.value; //  inputRef.current[id]?.value is another way but this is more readable
+    console.log({ id, value });
     const validationError = inputValidation(id, value);
     // Based on id check for error and set error state
     // If no error update error state to null
@@ -216,21 +220,20 @@ const useInputHandler = (ids, ref) => {
   };
 
   const handleBlur = (id) =>
-    useCallback(
-      (event) => {
-        handleInput(event, id);
-        // Let's check if we should dirty the input
-        // We only want to dirty if the input on blur is valid
-        // Guard: first check if dirty, if dirty we bail.
-        if (dirty[id]) return;
-        // If not dirty, set dirty to true
-        setDirty((prevDirty) => ({
-          ...prevDirty,
-          [id]: true,
-        }));
-      },
-      [id]
-    );
+    useCallback((event) => {
+      handleInput(event);
+      // Let's check if we should dirty the input
+      // We only want to dirty if the input on blur is valid
+      // Guard: first check if dirty, if dirty we bail.
+      if (dirty[id]) return;
+      // If not dirty, set dirty to true
+      setDirty((prevDirty) => ({
+        ...prevDirty,
+        [id]: true,
+      }));
+    }, []);
+
+  const handleDebouncedInput = useDebounce(handleInput);
 
   const handleChange = (id) =>
     useCallback(
@@ -239,9 +242,13 @@ const useInputHandler = (ids, ref) => {
         // We do this here to ensure we don't miss something between input
         // onblurs and onchanges
         setAllInputValid(validate());
-        if (dirty[id]) {
-          console.log('On change', id);
-          handleInput(event, id);
+
+        if (dirty[event.target?.id]) {
+          console.log(
+            `%c${'isDirty'} ${event.target?.id}: ${dirty[event.target?.id]}`,
+            'color: #967bb6;'
+          );
+          handleDebouncedInput(event);
         }
       },
       [dirty[id]]
@@ -256,3 +263,5 @@ const useInputHandler = (ids, ref) => {
     validate,
   };
 };
+
+// TODO: Rename things and work on padding of textfields and error gutter
