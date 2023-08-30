@@ -12,8 +12,6 @@ export default function Button({
 }) {
   const theme = useTheme();
 
-  console.log('theme', props.color);
-
   return (
     <StyledLoadingButton
       disableRipple

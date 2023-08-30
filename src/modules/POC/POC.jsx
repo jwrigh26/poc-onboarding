@@ -36,14 +36,12 @@ export default function POC() {
           <StartGrid>
             <Stack>
               <StartTitle>
-                Embark on Precision! Your Financial Future Starts Here.
+                Welcome to the Least Boring Onboarding Wizard, Ever!
               </StartTitle>
               <StartContentWrapper>
                 <StartSubtitle>
-                  Welcome to a journey tailored for accuracy and insight. Our
-                  onboarding process is designed to align with your unique
-                  financial goals, ensuring a clear path to success. Let's make
-                  numbers tell your story!
+                  Get ready for an onboarding experience so fun, you'll forget
+                  you're actually doing something productive. Strap in!
                 </StartSubtitle>
                 <Button
                   color="secondary"
