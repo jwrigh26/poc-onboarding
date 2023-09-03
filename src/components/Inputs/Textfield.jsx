@@ -44,15 +44,20 @@ export default function Textfield({
   const [prevError, setPrevError] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  // Double nested an ugly but it works.
-  // And it's only called when the error changes.
-  // Leaving it like this for readability.
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  // We need to adjust some state. Specifically, we need to know when the error
+  // prop changes. This is because we want to animate the error text in and out.
+  // Storing information from the previous render is a good way to do this.
+  // We start then by updating the previous error state to the current error state.
+  // When they are not the same. Then we do another if statement to check if the
+  // error is true and if it wasn't true before. If so,
+  // we set the show error state to true.
   if (!!error !== prevError) {
     setPrevError(!!error);
-    if (!!error) {
-      console.log('Show error', !!error, 'prv', prevError);
-      setShowError(true);
-    }
+  }
+
+  if (!!error && !!error !== prevError) {
+    setShowError(true);
   }
 
   return (

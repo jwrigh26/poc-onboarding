@@ -96,7 +96,11 @@ export function isNumeric(num) {
 }
 
 export function isObject(obj) {
-  return obj?.constructor === Object;
+  return (
+    obj !== null &&
+    typeof obj === 'object' &&
+    Object.prototype.toString.call(obj) === '[object Object]'
+  );
 }
 
 export function isString(str) {
@@ -228,7 +232,7 @@ export function isSameDay(a, b) {
   if (hasValue(a) && hasValue(b)) {
     return differenceInCalendarDays(a, b) === 0;
   }
-  return false
+  return false;
 }
 
 export function isSameCalendarMonth(a, b) {

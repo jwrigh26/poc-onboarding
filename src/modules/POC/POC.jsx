@@ -15,16 +15,18 @@ import Waves from 'components/Waves';
 import EastIcon from '@mui/icons-material/East';
 import Wizard from 'components/Wizard/Wizard';
 import WizzardProvider from 'providers/WizzardProvider';
+import { useWizzardContext } from 'providers/WizzardProvider';
 
 // Steps
 import Personal from './steps/Personal';
 import Address from './steps/Address';
 import Contact from './steps/Contact';
+import Typography from '@mui/material/Typography';
 
 const steps = new Map([
   [0, { label: 'Personal', Element: Personal, error: false }],
-  [1, { label: 'Address', Element: Address, error: false }],
-  [2, { label: 'Contact', Element: Contact, error: false }],
+  [1, { label: 'Contact', Element: Contact, error: false }],
+  // [1, { label: 'Address', Element: Address, error: false }],
 ]);
 
 export default function POC() {
@@ -65,11 +67,35 @@ export default function POC() {
             <Main>
               <Wizard />
             </Main>
-            <Leading />
+            <Leading>
+              <Debugger />
+            </Leading>
             <Trailing />
           </Grid>
         </WizzardProvider>
       )}
     </>
+  );
+}
+
+function Debugger() {
+  const { meta, state } = useWizzardContext();
+  return (
+    <Stack spacing={2}>
+      <Typography>Debug</Typography>
+      <Button
+        onClick={() => {
+          console.log(`%cActiveStep ${state.activeStep}`, 'color: light-blue;');
+          console.log(`%cSteps`, 'color: lime;');
+          console.log(JSON.stringify(Array.from(state.steps), null, 2));
+          console.log(`%cCompleted`, 'color: #967bb6;');
+          console.table(state.completed);
+          console.log(`%c${'Meta'}`, 'color: #967bb6;');
+          console.table(meta);
+        }}
+      >
+        View State
+      </Button>
+    </Stack>
   );
 }

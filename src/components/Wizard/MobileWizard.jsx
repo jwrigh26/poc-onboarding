@@ -14,6 +14,13 @@ export default function MobileWizzard() {
   const { handleReset } = actions;
   const { totalSteps } = meta;
   const { steps } = state;
+  // We itterate the Map using Array.from
+  // Array.from creates a new array where
+  // each element is a key/value pair
+  // index is the map key and step is the value
+  // We pass the index to the step element so it can
+  // know which step it is if needed and also to
+  // check if it is the last step
   return (
     <Box sx={{ p: 2 }}>
       <Stepper activeStep={activeStep} orientation="vertical">

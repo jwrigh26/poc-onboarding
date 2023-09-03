@@ -1,16 +1,16 @@
 import { hasValue, isString } from 'helpers/utils';
 import { useRef } from 'react';
 import { useWizzardContext } from 'providers/WizzardProvider';
+import { useWizardInputHandler } from 'hooks/useWizardInputHandler';
 import Box from '@mui/material/Box';
 import Button from 'components/Button';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Textfield from 'components/Inputs/Textfield';
-import NumberTextfield from 'components/Inputs/NumberTextfield';
 
 export default function Personal({ index }) {
   const inputRef = useRef([]);
-  const { meta } = useWizzardContext();
+  const { actions, meta } = useWizzardContext();
 
   // Spin up a custom hook to handle all input changes
   // It takes the ids and well a ref used to access the input values
@@ -22,12 +22,18 @@ export default function Personal({ index }) {
   // - handleChange: function to handle the change event for a given input
   // - isValid: function to validate all inputs
   // Note: It exepects all inputs to have an id and be unconrtolled inputs
-  const { disabled, getError, handleBlur, handleChange, isValid } =
-    useWizardInputHandler(
-      [PERSONAL_ID.FIRSTNAME, PERSONAL_ID.LASTNAME, PERSONAL_ID.PHONENUMBER],
-      inputRef,
-      validationCallback
-    );
+  const {
+    disabled,
+    getError,
+    handleBlur,
+    handleChange,
+    isValid,
+    updateStepperErrorStatus,
+  } = useWizardInputHandler(
+    [PERSONAL_ID.FIRSTNAME, PERSONAL_ID.LASTNAME],
+    inputRef,
+    validationCallback
+  );
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -41,6 +47,11 @@ export default function Personal({ index }) {
     } else {
       console.log(`%c${'NOT VALID'}`, 'color: red;');
     }
+  };
+
+  const handleBack = () => {
+    updateStepperErrorStatus();
+    actions.handleBack();
   };
 
   return (
@@ -69,27 +80,6 @@ export default function Personal({ index }) {
           placeholder="Enter your last name"
           required
         />
-        <NumberTextfield
-          error={getError(PERSONAL_ID.PHONENUMBER)}
-          id={PERSONAL_ID.PHONENUMBER}
-          label="Phone Number"
-          formatType="phone"
-          hint="Example: ( xxx ) xxx - xxxx"
-          inputRef={(el) => (inputRef.current[PERSONAL_ID.PHONENUMBER] = el)}
-          maxLength={20}
-          onBlur={handleBlur(PERSONAL_ID.PHONENUMBER)}
-          onChange={handleChange(PERSONAL_ID.PHONENUMBER)}
-        />
-        {/* <NumberTextfield
-          error={hasValue(error?.amount) ? error.amount : null}
-          id="amount"
-          label="Amount"
-          formatType="currency"
-          inputRef={(el) => (inputRef.current['amount'] = el)}
-          maxLength={11}
-          onBlur={handleInput('amount')}
-          onChange={handleInput('amount')}
-        /> */}
       </Stack>
       <Box sx={{ mb: 2 }}>
         <div>
@@ -103,7 +93,7 @@ export default function Personal({ index }) {
           </Button>
           <Button
             disabled={index === 0}
-            onClick={() => console.log('back')}
+            onClick={handleBack}
             sx={{ mt: 1, mr: 1 }}
           >
             Back
@@ -118,11 +108,10 @@ Personal.propTypes = {
   index: PropTypes.number.isRequired,
 };
 
-// PERSONAL_IDS
+// Ids to use for the inputs and keep them consistent
 const PERSONAL_ID = {
   FIRSTNAME: 'firstname',
   LASTNAME: 'lastname',
-  PHONENUMBER: 'phonenumber',
 };
 
 /**
@@ -156,17 +145,6 @@ const validationCallback = (id, value) => {
         error = 'Last name is invalid.';
       } else if (value.length < 2) {
         error = 'Last name should be at least 2 characters.';
-      }
-      break;
-    case 'phonenumber':
-      const phoneRegex = /^\(\s*\d{3}\s*\)\s*\d{3}\s*-\s*\d{4}$/;
-      if (!phoneRegex.test(value)) {
-        error = 'Invalid phone number. Use format ( xxx ) xxx - xxxx';
-      }
-      break;
-    case 'amount':
-      if (value <= 0) {
-        error = 'Amount should be greater than zero.';
       }
       break;
     default:

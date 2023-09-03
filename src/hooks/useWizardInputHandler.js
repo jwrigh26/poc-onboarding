@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useWizzardContext } from 'providers/WizzardProvider';
 import { useDebounce } from 'hooks/useDebounce';
+import { hasValue } from '../helpers/utils';
 /**
  * Custom hook to handle input changes and validation inside a wizard.
  * @param {Array} ids - Array of input IDs to validate.
@@ -24,18 +25,30 @@ import { useDebounce } from 'hooks/useDebounce';
  * The hook leverages memoization (useCallback) and debouncing for performance optimization.
  */
 export const useWizardInputHandler = (ids, ref, validationCallback) => {
-  const { actions } = useWizzardContext();
+  const { actions, state } = useWizzardContext();
+
+  // Grab inputErrors from activeStep to help with persisting errors from step to step
+  const activeStep = state?.steps.get(state.activeStep || 0);
+  const inputErrors = activeStep?.inputErrors ?? {};
+  // convert input errors into index/boolean to help persist dirty state too.
+  const inputErroBooleans = Object.keys(inputErrors).reduce((acc, key) => {
+    acc[key] = !!inputErrors[key];
+    return acc;
+  }, {});
+
   // Object of key/value ( strings ) to track input errors
   // errors looks like this: { id: 'error message' }
-  const [errors, setError] = useState(null);
+  // const [errors, setError] = useState(inputErrors);
+
   // Object of key/value ( booleans ) to track if an input has been dirtied
   // dirty looks like this: { id: true }
-  const [dirty, setDirty] = useState({});
+  const [dirty, setDirty] = useState(inputErroBooleans);
 
   // Helper method to get the error for a given id
   // It takes an id and a string used as a error message
   const getError = (id) => {
-    return errors?.[id] || null;
+    return inputErrors?.[id] || null;
+    // return inputErrors?.get(id) || null;
   };
 
   /**
@@ -88,25 +101,44 @@ export const useWizardInputHandler = (ids, ref, validationCallback) => {
     // Run the validation callback to check if the input is valid
     const validationError = validationCallback(id, value);
 
-    // If we have an error update the error state
-    // By setting the error state we can display the error message
+    // Update context input error to persist from step to step
+    actions.setInputError(id, validationError);
+
     if (validationError) {
-      setError((prevErrors) => ({
-        ...prevErrors,
-        [id]: validationError,
-      }));
-      // Important:
-      // Update the stepper too!
-      // This will show the error icon/styles for the stepper
       actions.setError();
     } else {
-      // No error, clear the error state
-      setError((prevErrors) => ({
-        ...prevErrors,
-        [id]: null,
-      }));
-      // Clear the stepper icon/styles for the stepper
       actions.clearError();
+    }
+
+    // If we have an error update the error state
+    // By setting the error state we can display the error message
+    // Note: we update stepper error status here too
+    // if (validationError) {
+    //   setError((prevErrors) => ({
+    //     ...prevErrors,
+    //     [id]: validationError,
+    //   }));
+    //   actions.setError();
+    // } else {
+    //   // No error, clear the error state
+    //   setError((prevErrors) => ({
+    //     ...prevErrors,
+    //     [id]: null,
+    //   }));
+    //   actions.clearError();
+    // }
+  };
+
+  const updateStepperErrorStatus = () => {
+    // Run through all fields and check if they are valid
+    const valid = isValid();
+    setAllInputValid(valid);
+
+    // Next we want to update stepper state.
+    if (valid) {
+      actions.clearError();
+    } else {
+      actions.setError();
     }
   };
 
@@ -146,23 +178,11 @@ export const useWizardInputHandler = (ids, ref, validationCallback) => {
 
   // Takes the id and returns a function that takes an event
   // It calls handleDebouncedInput and passes the event
-  // handleDebouncedInput is a debounced version of handleInput
-  // What is going on here?
-  // So first, when the handleChange event is run
-  // We want to be agressive and check if all inputs are valid
-  // This is to ensure we cover all cases where the user doesn't blur the input.
-  // Super important to do this here because we don't want to miss an error!
-  // Next, we check if the input is dirty.
-  // If the input is dirty we call handleDebouncedInput, which debounces handleInput
-  // Which as we know, runs the validation callback and updates the error state
+  // handleDebouncedInput is a debounced version of handleInput,
+  // but only if the input is dirty
   const handleChange = (id) =>
     useCallback(
       (event) => {
-        // Run through all fields and check if they are valid
-        // We do this here to ensure we don't miss something between input
-        // onblurs and onchanges
-        setAllInputValid(isValid());
-
         // Next if the input is dirty, run the debounced input
         if (dirty[event.target?.id]) {
           handleDebouncedInput(event);
@@ -179,5 +199,33 @@ export const useWizardInputHandler = (ids, ref, validationCallback) => {
     handleBlur,
     handleChange,
     isValid,
+    updateStepperErrorStatus,
   };
 };
+
+// What is the bug
+// Errors are held by the hook so it does not persist from step to step
+// Stepper errors are held by the context so it does persist from step to step
+
+// Stepper context error is { index: 0, error: true }
+
+// In the future each step will derivive values from useRTKQueryHook
+// For errors how to persist them from step to step?
+
+/**
+ * In input handler we setError like so:
+ * if (validationError) {
+      setError((prevErrors) => ({
+        ...prevErrors,
+        [id]: validationError,
+      }));
+    } else {
+      // No error, clear the error state
+      setError((prevErrors) => ({
+        ...prevErrors,
+        [id]: null,
+      }));
+    }
+  *
+
+ */
