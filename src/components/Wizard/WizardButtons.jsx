@@ -34,7 +34,7 @@ export default function WizardButtons({ disabled, index, inputRef, isValid }) {
   };
 
   return (
-    <Box sx={{ mt: 4, mb: 1 }}>
+    <Box sx={{ mt: 3, mb: 1 }}>
       <Button
         color="secondary"
         disabled={disabled}

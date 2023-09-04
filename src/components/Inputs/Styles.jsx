@@ -5,6 +5,26 @@ import FormControl from '@mui/material/FormControl';
 import InputBase from '@mui/material/InputBase';
 import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
+import NativeSelect from '@mui/material/NativeSelect';
+
+export const StyledNativeSelect = styled(NativeSelect)(({ theme }) => ({
+  '& .MuiNativeSelect-select': {
+    padding: theme.spacing(1),
+    borderRadius: theme.shape.borderRadius,
+    transition: theme.transitions.create([
+      'background-color',
+      'border',
+      'box-shadow',
+    ]),
+    '&:focus': {
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    },
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.primary.main, 0.05),
+    },
+  },
+}));
 
 export const ErrorTransitionWrapper = styled('div')(({ theme }) => ({
   overflow: 'hidden',

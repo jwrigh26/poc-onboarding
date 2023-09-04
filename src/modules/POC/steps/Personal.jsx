@@ -6,8 +6,6 @@ import Stack from '@mui/material/Stack';
 import Textfield from 'components/Inputs/Textfield';
 import WizardButtons from 'components/Wizard/WizardButtons';
 
-import Select from 'components/Inputs/Select';
-
 export default function Personal({ index }) {
   const inputRef = useRef([]);
 
@@ -61,12 +59,6 @@ export default function Personal({ index }) {
           placeholder="Enter your last name"
           required
         />
-        <Select
-          id={PERSONAL_ID.FOO}
-          label="Foo Label"
-          inputRef={(el) => (inputRef.current[PERSONAL_ID.FOO] = el)}
-          onChange={handleSelect(PERSONAL_ID.FOO)}
-        />
       </Stack>
       <WizardButtons
         disabled={disabled}
@@ -104,7 +96,7 @@ const PERSONAL_ID = {
 const validationCallback = (id, value) => {
   let error = null;
   switch (id) {
-    case 'firstname':
+    case PERSONAL_ID.FIRSTNAME:
       if (!hasValue(value)) {
         error = 'First name is required.';
       } else if (!isString(value)) {
@@ -113,7 +105,7 @@ const validationCallback = (id, value) => {
         error = 'First name should be at least 2 characters.';
       }
       break;
-    case 'lastname':
+    case PERSONAL_ID.LASTNAME:
       if (!hasValue(value)) {
         error = 'Last name is required.';
       } else if (!isString(value)) {
@@ -121,8 +113,6 @@ const validationCallback = (id, value) => {
       } else if (value.length < 2) {
         error = 'Last name should be at least 2 characters.';
       }
-      break;
-    case 'foome':
       break;
     default:
       break;

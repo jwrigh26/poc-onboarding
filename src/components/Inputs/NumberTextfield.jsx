@@ -79,6 +79,12 @@ export default function NumberTextfield({
         mask: '_',
       };
       break;
+    case 'zipcode':
+      formatProps = {
+        format: '#####', // Only 5 digits
+        allowEmptyFormatting: true,
+      };
+      break;
     default:
       break;
   }
@@ -129,6 +135,7 @@ NumberTextfield.propTypes = {
     'float',
     'percent',
     'phone',
+    'zipcode',
   ]).isRequired,
   gutter: PropTypes.bool,
   hint: PropTypes.string,

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Select from 'components/Inputs/Select';
 import WizardButtons from 'components/Wizard/WizardButtons';
+import { statesOptionList } from 'assets/states';
 
 export default function Address({ index }) {
   const inputRef = useRef([]);
@@ -24,6 +25,7 @@ export default function Address({ index }) {
           label="State"
           inputRef={(el) => (inputRef.current[ADDRESS.STATE] = el)}
           onChange={handleSelect}
+          options={statesOptionList}
         />
       </Stack>
       <WizardButtons

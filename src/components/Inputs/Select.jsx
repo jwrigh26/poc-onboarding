@@ -8,15 +8,17 @@ import {
   InputWrapper,
   InputErrorText,
   InputHintText,
+  StyledNativeSelect as NativeSelect,
 } from './Styles';
 import { CSSTransition } from 'react-transition-group';
 import MenuItem from '@mui/material/MenuItem';
 import PropTypes from 'prop-types';
 // import MUISelect from '@mui/material/Select';
-import NativeSelect from '@mui/material/NativeSelect';
+// import NativeSelect from '@mui/material/NativeSelect';
 
 export default function Select({
   animateError = true,
+  defaultValue,
   error,
   gutter,
   hint,
@@ -25,6 +27,7 @@ export default function Select({
   label,
   onBlur: handleBlur,
   onChange: handleChange,
+  options = [{ label: 'None', value: '' }],
   required: isRequired,
   ...props
 }) {
@@ -62,13 +65,15 @@ export default function Select({
             maxLength: props?.maxLength > 0 ? props.maxLength : 128,
           }}
           onChange={handleChange}
-          defaultValue={''}
+          defaultValue={defaultValue || ''}
           {...props}
         >
           <option aria-label="None" value="" />
-          <option value={10}>Ten</option>
-          <option value={20}>Twenty</option>
-          <option value={30}>Thirty</option>
+          {options.map((option, index) => (
+            <option key={index} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </NativeSelect>
         {/* If no animation is needed this will show an error right away. */}
         {!animateError && error && <InputErrorText>{error}</InputErrorText>}
@@ -89,6 +94,7 @@ export default function Select({
 
 Select.propTypes = {
   animateError: PropTypes.bool,
+  defaultValue: PropTypes.any,
   error: PropTypes.string,
   gutter: PropTypes.bool,
   hint: PropTypes.string,
@@ -97,5 +103,11 @@ Select.propTypes = {
   label: PropTypes.string.isRequired,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.any.isRequired,
+    })
+  ),
   required: PropTypes.bool,
 };

@@ -2,6 +2,7 @@ import { hasValue, isString } from 'helpers/utils';
 import { useRef } from 'react';
 import { useWizzardContext } from 'providers/WizzardProvider';
 import { useWizardInputHandler } from 'hooks/useWizardInputHandler';
+import { formatToNumber } from 'react-number-format';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Textfield from 'components/Inputs/Textfield';
