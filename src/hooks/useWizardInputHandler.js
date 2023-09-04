@@ -48,27 +48,38 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
   };
 
   /**
-   * Validate all inputs
-   * @param {Array} inputs
+   * Checks all inputs for errors
+   * @param {Object} options
    * @returns {Boolean} isValid
    */
-  // Helper method to validate all inputs
-  // It uses the ids array to run a some loop through all inputs
-  // It then uses the validationCallback to check if the input is valid
-  // If the input is true it breaks out of the loop and returns true
-  // True meaning it's valid!
-  // Note:
-  // -- Something to note is the validationCallback returns an error message if the input is invalid
-  // -- If the input is valid it returns null
-  // -- This is opposite of what we want for isValid
-  const isValid = () => {
+  const isValid = (options) => {
+    const { dirty = false } = options || {};
+    // Helper method to validate all inputs
+    // It uses the ids array to run a some loop through all inputs
+    // It then uses the validationCallback to check if the input is valid
+    // If the input is true it breaks out of the loop and returns true
+    // True meaning it's valid!
+    // Note:
+    // -- Something to note is the validationCallback returns an error message if the input is invalid
+    // -- If the input is valid it returns null
+    // -- This is opposite of what we want for isValid
+
+    // ------------
     // check if at least one input has an error message
     // We'll break out of the loop if we find an error
     // hasValidationError will be true if at least one input has an error
     // Down below we return the opposite of hasValidationError
     // To say the form is valid if no errors are found
-    const hasValidationError = ids?.some((id) => {
+
+    let filteredIds = ids;
+
+    if (dirty) {
+      filteredIds = ids.filter((id) => dirty[id]);
+    }
+
+    const hasValidationError = filteredIds?.some((id) => {
       const value = ref.current[id]?.value;
+      console.log('isValid validationError id: ', id, 'value', value);
       const validationError = validationCallback(id, value);
       const hasError = hasValue(validationError);
       return hasError;
@@ -90,7 +101,7 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
     // Disable default behavior to prevent page reload
     event.preventDefault();
 
-    console.log('Event', event.type, event.target.id, event.target.value);
+    // console.log('Event', event.type, event.target.id, event.target.value);
     // Run to see if the form is valid or not. If not then set disabled to true
     // to prevent the user from submitting the form aka continuing the wizard
     setDisabled(!isValid());
@@ -106,6 +117,7 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
     // by calling ref.current[id]?.value etc.
     // but by calling event.target we ensure we get the latest value
     const { id, value } = event.target;
+    console.log('Event', event.target);
     // Run the validation callback to check if the input is valid
     const validationError = validationCallback(id, value);
 
@@ -113,6 +125,11 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
     actions.setInputError(id, validationError);
     actions.setStepError(!!validationError);
   };
+
+  const handleSelect = useCallback((event) => {
+    handleInput(event);
+    handleDisable(event);
+  }, []);
 
   // Some background context on how inputs behave in this application.
   // We run validation on blur first, when the user leaves the input
@@ -130,8 +147,8 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
   // -- but we wanted to create consistency between handleBlur and handleChange
   // -- handChange takes the id as an argument because it's needed for making
   // -- sure the debounced function is called with the correct id
-  const handleBlur = (id) =>
-    useCallback((event) => {
+  const handleBlur = useCallback(
+    (id) => (event) => {
       handleInput(event);
       // Let's check if we should dirty the input
       // We only want to dirty if the input on blur is valid
@@ -143,7 +160,9 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
         [id]: true,
       }));
       handleDisable(event);
-    }, []);
+    },
+    []
+  );
 
   // We use debounce to prevent the validation callback from running on every change
   // This helps with performance and prevents excessive re-renders
@@ -157,6 +176,10 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
   // It calls handleDebouncedInput and passes the event
   // handleDebouncedInput is a debounced version of handleInput,
   // but only if the input is dirty
+
+  // Note:
+  // We have a dynamic dependency array for useCallback
+  // that needs to be re-evaluated on every time handleChange is called
   const handleChange = (id) =>
     useCallback(
       (event) => {
@@ -176,6 +199,7 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
     getError,
     handleBlur,
     handleChange,
+    handleSelect,
     isValid,
   };
 };

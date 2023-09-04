@@ -1,15 +1,15 @@
 import { hasValue, isString } from 'helpers/utils';
 import { useRef } from 'react';
-import { useWizzardContext } from 'providers/WizzardProvider';
 import { useWizardInputHandler } from 'hooks/useWizardInputHandler';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Textfield from 'components/Inputs/Textfield';
 import WizardButtons from 'components/Wizard/WizardButtons';
 
+import Select from 'components/Inputs/Select';
+
 export default function Personal({ index }) {
   const inputRef = useRef([]);
-  const { actions, meta } = useWizzardContext();
 
   // Spin up a custom hook to handle all input changes
   // It takes the ids and well a ref used to access the input values
@@ -21,13 +21,19 @@ export default function Personal({ index }) {
   // - handleChange: function to handle the change event for a given input
   // - isValid: function to validate all inputs
   // Note: It exepects all inputs to have an id and be unconrtolled inputs
-  const { disabled, getError, handleBlur, handleChange, isValid } =
-    useWizardInputHandler(
-      index,
-      [PERSONAL_ID.FIRSTNAME, PERSONAL_ID.LASTNAME],
-      inputRef,
-      validationCallback
-    );
+  const {
+    disabled,
+    getError,
+    handleBlur,
+    handleChange,
+    handleSelect,
+    isValid,
+  } = useWizardInputHandler(
+    index,
+    [PERSONAL_ID.FIRSTNAME, PERSONAL_ID.LASTNAME, PERSONAL_ID.FOO],
+    inputRef,
+    validationCallback
+  );
 
   return (
     <>
@@ -55,8 +61,19 @@ export default function Personal({ index }) {
           placeholder="Enter your last name"
           required
         />
+        <Select
+          id={PERSONAL_ID.FOO}
+          label="Foo Label"
+          inputRef={(el) => (inputRef.current[PERSONAL_ID.FOO] = el)}
+          onChange={handleSelect(PERSONAL_ID.FOO)}
+        />
       </Stack>
-      <WizardButtons disabled={disabled} index={index} isValid={isValid} />
+      <WizardButtons
+        disabled={disabled}
+        index={index}
+        inputRef={inputRef}
+        isValid={isValid}
+      />
     </>
   );
 }
@@ -69,6 +86,7 @@ Personal.propTypes = {
 const PERSONAL_ID = {
   FIRSTNAME: 'firstname',
   LASTNAME: 'lastname',
+  FOO: 'foome',
 };
 
 /**
@@ -103,6 +121,8 @@ const validationCallback = (id, value) => {
       } else if (value.length < 2) {
         error = 'Last name should be at least 2 characters.';
       }
+      break;
+    case 'foome':
       break;
     default:
       break;

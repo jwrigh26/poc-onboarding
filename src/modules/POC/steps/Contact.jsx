@@ -49,7 +49,12 @@ export default function Contact({ index }) {
           required
         />
       </Stack>
-      <WizardButtons disabled={disabled} index={index} isValid={isValid} />
+      <WizardButtons
+        disabled={disabled}
+        index={index}
+        inputRef={inputRef}
+        isValid={isValid}
+      />
     </>
   );
 }
@@ -107,3 +112,5 @@ const validationCallback = (id, value) => {
   }
   return error;
 };
+
+// Next work on Address and selection of state

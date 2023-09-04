@@ -90,8 +90,6 @@ const reducer = (state, action) => {
       );
     }
 
-    console.log('Error step', state.activeStep, action.payload);
-
     // Check if any inputErrors values are truthy. If so bail
     // Because we don't want to clear the errors prematurely.
     if (
@@ -100,7 +98,7 @@ const reducer = (state, action) => {
       isObject(updatedStep.inputErrors) &&
       Object.values(updatedStep.inputErrors).some((el) => el)
     ) {
-      console.log('Need to clear errors');
+      console.log(`%c${'Clear Errors'}`, 'color: red;');
       console.log(JSON.stringify(updatedStep.inputErrors));
       return state;
     }

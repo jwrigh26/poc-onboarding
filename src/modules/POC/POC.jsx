@@ -24,9 +24,9 @@ import Contact from './steps/Contact';
 import Typography from '@mui/material/Typography';
 
 const steps = new Map([
-  [0, { label: 'Personal', Element: Personal, error: false }],
+  // [0, { label: 'Personal', Element: Personal, error: false }],
+  [0, { label: 'Address', Element: Address, error: false }],
   [1, { label: 'Contact', Element: Contact, error: false }],
-  // [1, { label: 'Address', Element: Address, error: false }],
 ]);
 
 export default function POC() {
@@ -88,10 +88,10 @@ function Debugger() {
           console.log(`%cActiveStep ${state.activeStep}`, 'color: light-blue;');
           console.log(`%cSteps`, 'color: lime;');
           console.log(JSON.stringify(Array.from(state.steps), null, 2));
-          console.log(`%cCompleted`, 'color: #967bb6;');
-          console.table(state.completed);
-          console.log(`%c${'Meta'}`, 'color: #967bb6;');
-          console.table(meta);
+          // console.log(`%cCompleted`, 'color: #967bb6;');
+          // console.table(state.completed);
+          // console.log(`%c${'Meta'}`, 'color: #967bb6;');
+          // console.table(meta);
         }}
       >
         View State
