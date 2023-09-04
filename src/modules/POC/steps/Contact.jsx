@@ -2,7 +2,6 @@ import { hasValue, isString } from 'helpers/utils';
 import { useRef } from 'react';
 import { useWizzardContext } from 'providers/WizzardProvider';
 import { useWizardInputHandler } from 'hooks/useWizardInputHandler';
-import { formatToNumber } from 'react-number-format';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Textfield from 'components/Inputs/Textfield';
@@ -84,33 +83,36 @@ const CONTACT_IDS = {
  */
 const validationCallback = (id, value) => {
   let error = null;
-  // TODO: Handle these weird cases
-  // required vs not requried
-  const phoneRegex = /^\(\s*\d{3}\s*\)\s*\d{3}\s*-\s*\d{4}$/;
+
+  // Function to clean up phone number by removing non-digits
+  const cleanPhoneNumber = (phoneNumber) => phoneNumber.replace(/\D/g, '');
+
+  const phoneRegex = /^\d{10}$/; // Just checking for 10 digits now
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   switch (id) {
     case CONTACT_IDS.PHONENUMBER:
-      if (
-        !value ||
-        '' === value ||
-        (id === CONTACT_IDS.PHONENUMBER && '( ___ ) ___ - ____' === value)
-      ) {
-        return null;
-      } else if (!phoneRegex.test(value)) {
+      const cleanValue = cleanPhoneNumber(value);
+      console.log(`%c${'CleanedPhoneNumber'} ${cleanValue}`, 'color: #967bb6;');
+      if (!cleanValue) {
+        return null; // Empty, so let it pass or return an error based on if the field is required
+      } else if (!phoneRegex.test(cleanValue)) {
         error = 'Invalid phone number. Use format ( xxx ) xxx - xxxx';
       }
       break;
+
     case CONTACT_IDS.EMAIL:
-      if (!hasValue(value)) {
+      if (!value) {
         error = 'Email address is required.';
       } else if (!emailRegex.test(value)) {
         error = 'Invalid email address.';
       }
       break;
+
     default:
       break;
   }
+
   return error;
 };
 
