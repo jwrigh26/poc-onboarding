@@ -16,8 +16,8 @@ const ACTION_TYPES = {
   RESET: 'reset',
   COMPLETE: 'complete',
   UNCOMPLETE: 'uncomplete',
-  ERROR: 'error',
-  INPUT_ERROR: 'inputError',
+  STEP_ERROR: 'error', // Used to track if the step has an error
+  INPUT_ERROR: 'inputError', // Used to track each step's individual input errors
 };
 
 const WizzardContext = createContext();
@@ -49,44 +49,6 @@ const reducer = (state, action) => {
     return completedSteps() === totalSteps();
   };
 
-  if (action.type === ACTION_TYPES.ERROR) {
-    // Create a shallow copy of the existing Map
-    const newSteps = new Map(state.steps);
-
-    // Get the existing value for the given key
-    const stepToUpdate = newSteps.get(state.activeStep);
-
-    // Create a new object by shallow-copying all properties and updating the 'error' field
-    const updatedStep = { ...stepToUpdate };
-    // Check if not a boolean
-    if (typeof action.payload !== 'boolean') {
-      throw new Error(
-        `Error must be a boolean value. Received: ${typeof action.payload}`
-      );
-    }
-
-    // Check if any inputErrors values are truthy. If so bail
-    // Because we don't want to clear the errors prematurely.
-    if (updatedStep.error && !action.payload && isObject(updatedStep.inputErrors) &&
-      Object.values(updatedStep.inputErrors).some((el) => el)) {
-      console.log('Need to clear errors');
-      console.log(JSON.stringify(updatedStep.inputErrors));
-      return state;
-    }
-
-    // Update error bool value
-    updatedStep.error = action.payload;
-
-    // Set the new object back into the Map
-    newSteps.set(state.activeStep, updatedStep);
-
-    // Update the state
-    return {
-      ...state,
-      steps: newSteps,
-    };
-  }
-
   if (action.type === ACTION_TYPES.INPUT_ERROR) {
     // Create a shallow copy of the existing Map
     const newSteps = new Map(state.steps);
@@ -102,15 +64,53 @@ const reducer = (state, action) => {
       [action.payload.id]: action.payload.error,
     };
 
-    // console.log('Updated', action.payload.id, action.payload.error);
-    // console.log(
-    //   JSON.stringify({
-    //     ...updatedStep?.inputErrors,
-    //     [action.payload.id]: action.payload.error,
-    //   })
-    // );
-
     newSteps.set(state.activeStep, updatedStep);
+    // Update the state
+    return {
+      ...state,
+      steps: newSteps,
+    };
+  }
+
+  if (action.type === ACTION_TYPES.STEP_ERROR) {
+    // Create a shallow copy of the existing Map
+    const newSteps = new Map(state.steps);
+
+    // Get the existing value for the given key
+    const stepToUpdate = newSteps.get(state.activeStep);
+
+    // Create a new object by shallow-copying all properties and updating the 'error' field
+    const updatedStep = { ...stepToUpdate };
+    // Check if not a boolean
+    if (typeof action.payload !== 'boolean') {
+      throw new Error(
+        `Error must be a boolean value. Received: ${typeof action.payload}, ${
+          action.payload
+        }`
+      );
+    }
+
+    console.log('Error step', state.activeStep, action.payload);
+
+    // Check if any inputErrors values are truthy. If so bail
+    // Because we don't want to clear the errors prematurely.
+    if (
+      updatedStep.error &&
+      !action.payload &&
+      isObject(updatedStep.inputErrors) &&
+      Object.values(updatedStep.inputErrors).some((el) => el)
+    ) {
+      console.log('Need to clear errors');
+      console.log(JSON.stringify(updatedStep.inputErrors));
+      return state;
+    }
+
+    // Update error bool value
+    updatedStep.error = action.payload;
+
+    // Set the new object back into the Map
+    newSteps.set(state.activeStep, updatedStep);
+
     // Update the state
     return {
       ...state,
@@ -131,8 +131,8 @@ const reducer = (state, action) => {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? Array.from(state.steps.keys()).find(
-          (key) => !(key in state.completed)
-        )
+            (key) => !(key in state.completed)
+          )
         : state.activeStep + 1;
 
     return {
@@ -217,16 +217,12 @@ export default function WizzardProvider({ children, steps: initialSteps }) {
     dispatch({ type: ACTION_TYPES.RESET });
   }, []);
 
-  const setError = useCallback(() => {
-    dispatch({ type: ACTION_TYPES.ERROR, payload: true });
-  }, []);
-
   const setInputError = useCallback((id, error) => {
     dispatch({ type: ACTION_TYPES.INPUT_ERROR, payload: { id, error } });
   }, []);
 
-  const clearError = useCallback(() => {
-    dispatch({ type: ACTION_TYPES.ERROR, payload: false });
+  const setStepError = useCallback((value) => {
+    dispatch({ type: ACTION_TYPES.STEP_ERROR, payload: value });
   }, []);
 
   const value = {
@@ -238,9 +234,8 @@ export default function WizzardProvider({ children, steps: initialSteps }) {
       handleComplete,
       handleUncomplete,
       handleReset,
-      setError,
       setInputError,
-      clearError,
+      setStepError,
     },
     meta: {
       totalSteps,
@@ -249,16 +244,6 @@ export default function WizzardProvider({ children, steps: initialSteps }) {
       allStepsCompleted,
     },
   };
-
-  const errors = JSON.stringify(state?.errors);
-
-  useEffect(() => {
-    if (hasValue(state?.errors)) {
-      console.log(`%c${'WizzardProvider'}`, 'color: pink;');
-      console.log(`%c${'errors'}`, 'color: pink;');
-      console.log({ errors: state?.errors });
-    }
-  }, [errors]);
 
   return (
     <WizzardContext.Provider value={value}>{children}</WizzardContext.Provider>

@@ -81,8 +81,8 @@ export default function POC() {
 function Debugger() {
   const { meta, state } = useWizzardContext();
   return (
-    <Stack spacing={2}>
-      <Typography>Debug</Typography>
+    <Stack spacing={2} sx={{ m: 2 }}>
+      <Typography variant="Button">Debug</Typography>
       <Button
         onClick={() => {
           console.log(`%cActiveStep ${state.activeStep}`, 'color: light-blue;');

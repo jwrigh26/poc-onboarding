@@ -30,7 +30,7 @@ export function useDebounce(callback, delay = 250) {
   const handleDebounce = useMemo(
     () =>
       debounce((event) => {
-        event.persist(); // make sure even hangs around for the entire debounce time
+        event.persist(); // make sure the event hangs around for the entire debounce time
         if (isFunction(callback)) {
           // We're expecting an event to be passed in, so we give it to the callback
           callback(event);

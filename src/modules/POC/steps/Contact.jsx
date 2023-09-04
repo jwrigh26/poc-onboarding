@@ -2,12 +2,11 @@ import { hasValue, isString } from 'helpers/utils';
 import { useRef } from 'react';
 import { useWizzardContext } from 'providers/WizzardProvider';
 import { useWizardInputHandler } from 'hooks/useWizardInputHandler';
-import Box from '@mui/material/Box';
-import Button from 'components/Button';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Textfield from 'components/Inputs/Textfield';
 import NumberTextfield from 'components/Inputs/NumberTextfield';
+import WizardButtons from 'components/Wizard/WizardButtons';
 
 export default function Contact({ index }) {
   const inputRef = useRef([]);
@@ -15,33 +14,13 @@ export default function Contact({ index }) {
 
   // See notes in Personal.jsx for more details
   // Or see the hook itself
-  const {
-    disabled,
-    getError,
-    handleBlur,
-    handleChange,
-    isValid,
-    updateStepperErrorStatus,
-  } = useWizardInputHandler(
-    [CONTACT_IDS.EMAIL, CONTACT_IDS.PHONENUMBER],
-    inputRef,
-    validationCallback
-  );
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const values = Object.values(inputRef.current).map((el) => {
-      return el.value;
-    });
-    // console.log(`%c${'HandleSubmit'}`, 'color: pink;');
-    // console.table(values);
-    if (isValid()) {
-      // console.log(`%c${'Valid'}`, 'color: limeGreen;');
-      actions.handleNext();
-    } else {
-      console.log(`%c${'NOT VALID'}`, 'color: red;');
-    }
-  };
+  const { disabled, getError, handleBlur, handleChange, isValid } =
+    useWizardInputHandler(
+      index,
+      [CONTACT_IDS.EMAIL, CONTACT_IDS.PHONENUMBER],
+      inputRef,
+      validationCallback
+    );
 
   return (
     <>
@@ -70,25 +49,7 @@ export default function Contact({ index }) {
           required
         />
       </Stack>
-      <Box sx={{ mb: 2 }}>
-        <div>
-          <Button
-            color="secondary"
-            disabled={disabled}
-            onClick={handleSubmit}
-            sx={{ mt: 1, mr: 1 }}
-          >
-            {index === meta.totalSteps ? 'Finish' : 'Continue'}
-          </Button>
-          <Button
-            disabled={index === 0}
-            onClick={actions.handleBack}
-            sx={{ mt: 1, mr: 1 }}
-          >
-            Back
-          </Button>
-        </div>
-      </Box>
+      <WizardButtons disabled={disabled} index={index} isValid={isValid} />
     </>
   );
 }

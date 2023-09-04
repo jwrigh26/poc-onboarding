@@ -4,18 +4,28 @@ import Button from 'components/Button';
 import PropTypes from 'prop-types';
 
 export default function WizardButtons({ disabled, index, isValid }) {
-  const { actions, meta } = useWizzardContext();
+  const { actions, meta, state } = useWizzardContext();
   const handleBack = () => {
-    if (isValid()) {
-      actions.clearError();
-    } else {
-      actions.setError();
-    }
+    actions.setStepError(!isValid());
     actions.handleBack();
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (isValid()) {
+      console.log(
+        `%c${index === meta.totalSteps ? 'Finish' : 'Continue'}`,
+        'color: limeGreen;'
+      );
+      actions.handleNext();
+    } else {
+      console.log(`%c${'NOT VALID'}`, 'color: pink;');
+    }
+  };
+
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box sx={{ mt: 4, mb: 1 }}>
       <Button
         color="secondary"
         disabled={disabled}
@@ -24,9 +34,15 @@ export default function WizardButtons({ disabled, index, isValid }) {
       >
         {index === meta.totalSteps ? 'Finish' : 'Continue'}
       </Button>
-      <Button disabled={index === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
-        Back
-      </Button>
+      {index > 0 && (
+        <Button
+          disabled={index === 0}
+          onClick={handleBack}
+          sx={{ mt: 1, mr: 1 }}
+        >
+          Back
+        </Button>
+      )}
     </Box>
   );
 }

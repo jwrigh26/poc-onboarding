@@ -2,11 +2,10 @@ import { hasValue, isString } from 'helpers/utils';
 import { useRef } from 'react';
 import { useWizzardContext } from 'providers/WizzardProvider';
 import { useWizardInputHandler } from 'hooks/useWizardInputHandler';
-import Box from '@mui/material/Box';
-import Button from 'components/Button';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Textfield from 'components/Inputs/Textfield';
+import WizardButtons from 'components/Wizard/WizardButtons';
 
 export default function Personal({ index }) {
   const inputRef = useRef([]);
@@ -22,37 +21,13 @@ export default function Personal({ index }) {
   // - handleChange: function to handle the change event for a given input
   // - isValid: function to validate all inputs
   // Note: It exepects all inputs to have an id and be unconrtolled inputs
-  const {
-    disabled,
-    getError,
-    handleBlur,
-    handleChange,
-    isValid,
-    updateStepperErrorStatus,
-  } = useWizardInputHandler(
-    [PERSONAL_ID.FIRSTNAME, PERSONAL_ID.LASTNAME],
-    inputRef,
-    validationCallback
-  );
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const values = Object.values(inputRef.current).map((el) => {
-      return el.value;
-    });
-    console.log(`%c${'HandleSubmit'}`, 'color: pink;');
-    console.table(values);
-    if (isValid()) {
-      console.log(`%c${'Valid'}`, 'color: limeGreen;');
-    } else {
-      console.log(`%c${'NOT VALID'}`, 'color: red;');
-    }
-  };
-
-  const handleBack = () => {
-    updateStepperErrorStatus();
-    actions.handleBack();
-  };
+  const { disabled, getError, handleBlur, handleChange, isValid } =
+    useWizardInputHandler(
+      index,
+      [PERSONAL_ID.FIRSTNAME, PERSONAL_ID.LASTNAME],
+      inputRef,
+      validationCallback
+    );
 
   return (
     <>
@@ -81,25 +56,7 @@ export default function Personal({ index }) {
           required
         />
       </Stack>
-      <Box sx={{ mb: 2 }}>
-        <div>
-          <Button
-            color="secondary"
-            disabled={disabled}
-            onClick={handleSubmit}
-            sx={{ mt: 1, mr: 1 }}
-          >
-            {index === meta.totalSteps ? 'Finish' : 'Continue'}
-          </Button>
-          <Button
-            disabled={index === 0}
-            onClick={handleBack}
-            sx={{ mt: 1, mr: 1 }}
-          >
-            Back
-          </Button>
-        </div>
-      </Box>
+      <WizardButtons disabled={disabled} index={index} isValid={isValid} />
     </>
   );
 }
