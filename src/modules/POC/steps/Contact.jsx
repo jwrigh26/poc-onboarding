@@ -80,23 +80,25 @@ const validationCallback = (id, value) => {
   let error = null;
   // TODO: Handle these weird cases
   // required vs not requried
-  if (
-    !value ||
-    '' === value ||
-    (id === CONTACT_IDS.PHONENUMBER && '( ___ ) ___ - ____' === value)
-  ) {
-    return null;
-  }
+  const phoneRegex = /^\(\s*\d{3}\s*\)\s*\d{3}\s*-\s*\d{4}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
   switch (id) {
     case CONTACT_IDS.PHONENUMBER:
-      const phoneRegex = /^\(\s*\d{3}\s*\)\s*\d{3}\s*-\s*\d{4}$/;
-      if (!phoneRegex.test(value)) {
+      if (
+        !value ||
+        '' === value ||
+        (id === CONTACT_IDS.PHONENUMBER && '( ___ ) ___ - ____' === value)
+      ) {
+        return null;
+      } else if (!phoneRegex.test(value)) {
         error = 'Invalid phone number. Use format ( xxx ) xxx - xxxx';
       }
       break;
     case CONTACT_IDS.EMAIL:
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(value)) {
+      if (!hasValue(value)) {
+        error = 'Email address is required.';
+      } else if (!emailRegex.test(value)) {
         error = 'Invalid email address.';
       }
       break;

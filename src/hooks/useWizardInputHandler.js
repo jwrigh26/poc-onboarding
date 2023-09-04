@@ -82,7 +82,7 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
   // Note:
   // -- down below we return !allInputsValid as disabled to make it easier to read
   // -- and pass to the submit button's disabled prop
-  const [disabled, setDisabled] = useState(isValid());
+  const [disabled, setDisabled] = useState(true);
 
   const handleDisable = (event) => {
     // Guard: if no event or event.target bail
