@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useWizzardContext } from 'providers/WizzardProvider';
 import { useDebounce } from 'hooks/useDebounce';
 import { hasValue } from '../helpers/utils';
@@ -6,7 +6,6 @@ import { hasValue } from '../helpers/utils';
  * Custom hook to handle input changes and validation inside a wizard.
  * @param {Number} step - The current step of the wizard. Note: it may  not always be the active step.
  * @param {Array} ids - Array of input IDs to validate.
- * @param {Object} ref - A React ref object pointing to the input elements.
  * @param {Function} validationCallback - Function that takes an input id and its value as arguments,
  *                                        returns an error message string if the input is invalid,
  *                                        or null if the input is valid.
@@ -16,6 +15,7 @@ import { hasValue } from '../helpers/utils';
  *                      - handleBlur (function): Function to handle the onBlur event.
  *                      - handleChange (function): Function to handle the onChange event.
  *                      - isValid (function): Function to validate the entire form.
+ *                     - validationRef (object): React ref object pointing to the input elements.
  *
  * This hook makes use of a context to share state across Wizard steps.
  * The hook maintains two pieces of state, `errors` and `dirty`. The `errors` object keeps
@@ -25,7 +25,9 @@ import { hasValue } from '../helpers/utils';
  *
  * The hook leverages memoization (useCallback) and debouncing for performance optimization.
  */
-export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
+export const useWizardInputHandler = (step, ids, validationCallback) => {
+  // - A React ref object pointing to the input elements.
+  const validationRef = useRef({});
   const { actions, state } = useWizzardContext();
 
   // Grab inputErrors from activeStep to help with persisting errors from step to step
@@ -77,13 +79,17 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
       filteredIds = ids.filter((id) => dirty[id]);
     }
 
+    // Finds the first input that has an error from the validationRef object of inputs
     const hasValidationError = filteredIds?.some((id) => {
-      const value = ref.current[id]?.value;
-      console.log('isValid validationError id: ', id, 'value', value);
+      const value = validationRef.current[id]?.value;
+      // console.log('isValid validationError id: ', id, 'value', value);
       const validationError = validationCallback(id, value);
       const hasError = hasValue(validationError);
       return hasError;
     });
+
+    console.log('hasValidationError', hasValidationError);
+
     // Return opposite of hasValidationError for isValid
     return !hasValidationError;
   };
@@ -95,6 +101,7 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
   // -- and pass to the submit button's disabled prop
   const [disabled, setDisabled] = useState(true);
 
+  // Helper method to handle disabling the submit button or enabling it
   const handleDisable = (event) => {
     // Guard: if no event or event.target bail
     if (!event?.target) return;
@@ -114,10 +121,9 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
     event.preventDefault();
 
     // Note: We could have targeted the id and value
-    // by calling ref.current[id]?.value etc.
+    // by calling validationRefcurrent[id]?.value etc.
     // but by calling event.target we ensure we get the latest value
     const { id, value } = event.target;
-    console.log('Event', event.target);
     // Run the validation callback to check if the input is valid
     const validationError = validationCallback(id, value);
 
@@ -126,10 +132,18 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
     actions.setStepError(!!validationError);
   };
 
-  const handleSelect = useCallback((event) => {
-    handleInput(event);
-    handleDisable(event);
-  }, []);
+  const handleSelect = useCallback(
+    (id) => (ref) => {
+      console.log('HandleSelect', { id, value: ref?.value });
+      const validationError = validationCallback(id, ref?.value);
+
+      // Update context input error to persist from step to step
+      actions.setInputError(id, validationError);
+      actions.setStepError(!!validationError);
+      setDisabled(!isValid());
+    },
+    []
+  );
 
   // Some background context on how inputs behave in this application.
   // We run validation on blur first, when the user leaves the input
@@ -201,14 +215,6 @@ export const useWizardInputHandler = (step, ids, ref, validationCallback) => {
     handleChange,
     handleSelect,
     isValid,
+    validationRef,
   };
 };
-
-// What is the bug
-// Errors are held by the hook so it does not persist from step to step
-// Stepper errors are held by the context so it does persist from step to step
-
-// Stepper context error is { index: 0, error: true }
-
-// In the future each step will derivive values from useRTKQueryHook
-// For errors how to persist them from step to step?

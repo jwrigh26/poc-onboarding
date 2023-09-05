@@ -24,9 +24,9 @@ import Contact from './steps/Contact';
 import Typography from '@mui/material/Typography';
 
 const steps = new Map([
-  // [0, { label: 'Personal', Element: Personal, error: false }],
-  [0, { label: 'Address', Element: Address, error: false }],
-  [1, { label: 'Contact', Element: Contact, error: false }],
+  [0, { label: 'Personal', Element: Personal, error: false }],
+  [1, { label: 'Address', Element: Address, error: false }],
+  [2, { label: 'Contact', Element: Contact, error: false }],
 ]);
 
 export default function POC() {

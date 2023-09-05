@@ -10,7 +10,7 @@ import { NumericFormat, PatternFormat } from 'react-number-format';
 import PropTypes from 'prop-types';
 
 /**
- * NumberTextfield is an extension of the Textfield component which allows
+ * NumberTextfield is an extension of the uncontrolled Textfield component which allows
  * different number formatting options such as currency, integer and float.
  *
  * @param {Object} props - Props passed down from parent component
@@ -19,11 +19,11 @@ import PropTypes from 'prop-types';
  * @param {boolean} [props.gutter] - Whether to display a gutter below the text field.
  * @param {string} props.hint - Hint text to display
  * @param {string} props.id - Unique ID for the input
- * @param {function} props.inputRef - Ref for the input
  * @param {string} props.label - Label text for the input
  * @param {function} [props.onBlur] - Blur event handler for the input
  * @param {function} [props.onChange] - Change event handler for the input
  * @param {boolean} [props.required] - Whether the input is required
+ * @param {function} props.validationRef - The ref for keeping track of wizard/form validation.
  * @returns {JSX.Element} A formatted input field based on the specified number format.
  */
 export default function NumberTextfield({
@@ -32,9 +32,9 @@ export default function NumberTextfield({
   gutter,
   hint,
   id,
-  inputRef: ref,
   label,
   required: isRequired,
+  validationRef,
   ...props
 }) {
   // Custom props for NumericFormat  based on formatType
@@ -82,7 +82,6 @@ export default function NumberTextfield({
     case 'zipcode':
       formatProps = {
         format: '#####', // Only 5 digits
-        allowEmptyFormatting: true,
       };
       break;
     default:
@@ -101,7 +100,7 @@ export default function NumberTextfield({
           inputProps={{
             maxLength: props?.maxLength > 0 ? props.maxLength : null,
           }}
-          inputRef={ref}
+          inputRef={(el) => (validationRef.current[id] = el)}
           {...formatProps}
           {...props}
         />
@@ -113,7 +112,7 @@ export default function NumberTextfield({
           inputProps={{
             maxLength: props?.maxLength > 0 ? props.maxLength : null,
           }}
-          inputRef={ref}
+          inputRef={(el) => (validationRef.current[id] = el)}
           {...formatProps}
           {...props}
         />
@@ -140,8 +139,8 @@ NumberTextfield.propTypes = {
   gutter: PropTypes.bool,
   hint: PropTypes.string,
   id: PropTypes.string.isRequired,
-  inputRef: PropTypes.any.isRequired,
   label: PropTypes.string.isRequired,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
+  validationRef: PropTypes.any.isRequired,
 };

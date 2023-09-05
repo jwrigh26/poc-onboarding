@@ -1,5 +1,4 @@
 import { hasValue, isString } from 'helpers/utils';
-import { useRef } from 'react';
 import { useWizardInputHandler } from 'hooks/useWizardInputHandler';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
@@ -7,8 +6,6 @@ import Textfield from 'components/Inputs/Textfield';
 import WizardButtons from 'components/Wizard/WizardButtons';
 
 export default function Personal({ index }) {
-  const inputRef = useRef([]);
-
   // Spin up a custom hook to handle all input changes
   // It takes the ids and well a ref used to access the input values
   // It also takes a validation callback to validate the input
@@ -24,12 +21,11 @@ export default function Personal({ index }) {
     getError,
     handleBlur,
     handleChange,
-    handleSelect,
     isValid,
+    validationRef,
   } = useWizardInputHandler(
     index,
     [PERSONAL_ID.FIRSTNAME, PERSONAL_ID.LASTNAME, PERSONAL_ID.FOO],
-    inputRef,
     validationCallback
   );
 
@@ -41,30 +37,30 @@ export default function Personal({ index }) {
           error={getError(PERSONAL_ID.FIRSTNAME)}
           id={PERSONAL_ID.FIRSTNAME}
           label="First Name"
-          inputRef={(el) => (inputRef.current[PERSONAL_ID.FIRSTNAME] = el)}
           maxLength={50}
           onBlur={handleBlur(PERSONAL_ID.FIRSTNAME)}
           onChange={handleChange(PERSONAL_ID.FIRSTNAME)}
           placeholder="Enter your first name"
           required
+          validationRef={validationRef}
         />
         <Textfield
           error={getError(PERSONAL_ID.LASTNAME)}
           id={PERSONAL_ID.LASTNAME}
-          inputRef={(el) => (inputRef.current[PERSONAL_ID.LASTNAME] = el)}
           label="Last Name"
           maxLength={50}
           onBlur={handleBlur(PERSONAL_ID.LASTNAME)}
           onChange={handleChange(PERSONAL_ID.LASTNAME)}
           placeholder="Enter your last name"
           required
+          validationRef={validationRef}
         />
       </Stack>
       <WizardButtons
         disabled={disabled}
         index={index}
-        inputRef={inputRef}
         isValid={isValid}
+        validationRef={validationRef}
       />
     </>
   );

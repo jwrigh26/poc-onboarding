@@ -3,7 +3,12 @@ import Box from '@mui/material/Box';
 import Button from 'components/Button';
 import PropTypes from 'prop-types';
 
-export default function WizardButtons({ disabled, index, inputRef, isValid }) {
+export default function WizardButtons({
+  disabled,
+  index,
+  validationRef,
+  isValid,
+}) {
   const { actions, meta, state } = useWizzardContext();
   const handleBack = () => {
     const valid = isValid({ dirty: true });
@@ -21,9 +26,9 @@ export default function WizardButtons({ disabled, index, inputRef, isValid }) {
         'color: limeGreen;'
       );
       // For each input current console log the value
-      Object.keys(inputRef.current).forEach((key) => {
+      Object.keys(validationRef.current).forEach((key) => {
         console.log(
-          `%c${key}: ${inputRef.current[key].value}`,
+          `%c${key}: ${validationRef.current[key].value}`,
           'color: limeGreen;'
         );
       });
@@ -41,7 +46,7 @@ export default function WizardButtons({ disabled, index, inputRef, isValid }) {
         onClick={handleSubmit}
         sx={{ mt: 1, mr: 1 }}
       >
-        {index === meta.totalSteps ? 'Finish' : 'Continue'}
+        {index === meta.totalSteps - 1 ? 'Finish' : 'Continue'}
       </Button>
       {index > 0 && (
         <Button
@@ -59,6 +64,6 @@ export default function WizardButtons({ disabled, index, inputRef, isValid }) {
 WizardButtons.propTypes = {
   disabled: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
-  inputRef: PropTypes.object.isRequired,
+  validationRef: PropTypes.object.isRequired,
   isValid: PropTypes.func.isRequired,
 };

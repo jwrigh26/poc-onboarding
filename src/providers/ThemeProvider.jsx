@@ -89,9 +89,9 @@ export default function CustomStyles({ children }) {
 
   return (
     <>
-      <CssBaseline />
-      {inputGlobalStyles}
       <ColorModeContext.Provider value={colorMode}>
+        <CssBaseline />
+        {inputGlobalStyles}
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </ColorModeContext.Provider>
     </>
@@ -137,6 +137,35 @@ const inputGlobalStyles = (
         WebkitBoxShadow: '0 0 0 1000px #fff inset !important',
         WebkitTextFillColor: '#000 !important',
       },
+      // Autofill styles for select
+      'select:-internal-autofill-selected': {
+        backgroundColor: 'transparent !important',
+      },
+      'select:-webkit-autofill': {
+        WebkitBoxShadow: '0 0 0 1000px #fff inset !important',
+        WebkitTextFillColor: '#000 !important',
+        caretColor: '#000 !important',
+      },
+      'select:-webkit-autofill:hover': {
+        WebkitBoxShadow: '0 0 0 1000px #fff inset !important',
+        WebkitTextFillColor: '#000 !important',
+      },
+      'select:-webkit-autofill option': {
+        WebkitBoxShadow: '0 0 0 1000px #fff inset !important',
+        WebkitTextFillColor: '#000 !important', // Black text
+        caretColor: '#000 !important',
+      },
+      'select:-webkit-autofill:hover, select:-webkit-autofill:focus, select:-webkit-autofill:active':
+        {
+          WebkitBoxShadow: '0 0 0 1000px #fff inset !important',
+          WebkitTextFillColor: '#000 !important', // Black text
+        },
+      '&:-webkit-autofill': {
+        WebkitBoxShadow: '0 0 0 100px #fff inset !important',
+        WebkitTextFillColor: '#000 !important', // Black text
+      },
     }}
   />
 );
+
+//.css-m3l1ig-MuiNativeSelect-select-MuiInputBase-input:not([multiple]) optgroup

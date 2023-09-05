@@ -1,59 +1,61 @@
 import { hasValue, isString } from 'helpers/utils';
-import { useRef } from 'react';
-import { useWizzardContext } from 'providers/WizzardProvider';
 import { useWizardInputHandler } from 'hooks/useWizardInputHandler';
+import NumberTextfield from 'components/Inputs/NumberTextfield';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Textfield from 'components/Inputs/Textfield';
-import NumberTextfield from 'components/Inputs/NumberTextfield';
 import WizardButtons from 'components/Wizard/WizardButtons';
 
 export default function Contact({ index }) {
-  const inputRef = useRef([]);
-  const { actions, meta } = useWizzardContext();
-
   // See notes in Personal.jsx for more details
   // Or see the hook itself
-  const { disabled, getError, handleBlur, handleChange, isValid } =
-    useWizardInputHandler(
-      index,
-      [CONTACT_IDS.EMAIL, CONTACT_IDS.PHONENUMBER],
-      inputRef,
-      validationCallback
-    );
+  const {
+    disabled,
+    getError,
+    handleBlur,
+    handleChange,
+    isValid,
+    validationRef,
+  } = useWizardInputHandler(
+    index,
+    [CONTACT_IDS.EMAIL, CONTACT_IDS.PHONENUMBER],
+    validationCallback
+  );
 
   return (
     <>
       <Stack sx={{ mt: 2, gap: 2 }}>
         <Textfield
+          autoComplete="email"
           error={getError(CONTACT_IDS.EMAIL)}
           id={CONTACT_IDS.EMAIL}
-          inputRef={(el) => (inputRef.current[CONTACT_IDS.EMAIL] = el)}
           label="Email Address"
           maxLength={50}
           onBlur={handleBlur(CONTACT_IDS.EMAIL)}
           onChange={handleChange(CONTACT_IDS.EMAIL)}
           placeholder="Enter your email address"
           required
+          validationRef={validationRef}
         />
         <NumberTextfield
+          autoComplete="tel"
           error={getError(CONTACT_IDS.PHONENUMBER)}
           id={CONTACT_IDS.PHONENUMBER}
           label="Phone Number"
           formatType="phone"
           hint="Example: ( xxx ) xxx - xxxx"
-          inputRef={(el) => (inputRef.current[CONTACT_IDS.PHONENUMBER] = el)}
           maxLength={20}
           onBlur={handleBlur(CONTACT_IDS.PHONENUMBER)}
           onChange={handleChange(CONTACT_IDS.PHONENUMBER)}
           required
+          validationRef={validationRef}
         />
       </Stack>
       <WizardButtons
         disabled={disabled}
         index={index}
-        inputRef={inputRef}
         isValid={isValid}
+        validationRef={validationRef}
       />
     </>
   );
@@ -115,5 +117,3 @@ const validationCallback = (id, value) => {
 
   return error;
 };
-
-// Next work on Address and selection of state
