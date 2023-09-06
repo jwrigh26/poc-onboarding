@@ -23,34 +23,33 @@ export default function Personal({ index }) {
     handleChange,
     isValid,
     validationRef,
-  } = useWizardInputHandler(
-    index,
-    [PERSONAL_ID.FIRSTNAME, PERSONAL_ID.LASTNAME, PERSONAL_ID.FOO],
-    validationCallback
-  );
+  } = useWizardInputHandler({
+    ids: [PERSONAL_IDS.FIRSTNAME, PERSONAL_IDS.LASTNAME],
+    validationCallback,
+  });
 
   return (
     <>
       <Stack sx={{ mt: 2, gap: 2 }}>
         <Textfield
           autoFocus
-          error={getError(PERSONAL_ID.FIRSTNAME)}
-          id={PERSONAL_ID.FIRSTNAME}
+          error={getError(PERSONAL_IDS.FIRSTNAME)}
+          id={PERSONAL_IDS.FIRSTNAME}
           label="First Name"
           maxLength={50}
-          onBlur={handleBlur(PERSONAL_ID.FIRSTNAME)}
-          onChange={handleChange(PERSONAL_ID.FIRSTNAME)}
+          onBlur={handleBlur(PERSONAL_IDS.FIRSTNAME)}
+          onChange={handleChange(PERSONAL_IDS.FIRSTNAME)}
           placeholder="Enter your first name"
           required
           validationRef={validationRef}
         />
         <Textfield
-          error={getError(PERSONAL_ID.LASTNAME)}
-          id={PERSONAL_ID.LASTNAME}
+          error={getError(PERSONAL_IDS.LASTNAME)}
+          id={PERSONAL_IDS.LASTNAME}
           label="Last Name"
           maxLength={50}
-          onBlur={handleBlur(PERSONAL_ID.LASTNAME)}
-          onChange={handleChange(PERSONAL_ID.LASTNAME)}
+          onBlur={handleBlur(PERSONAL_IDS.LASTNAME)}
+          onChange={handleChange(PERSONAL_IDS.LASTNAME)}
           placeholder="Enter your last name"
           required
           validationRef={validationRef}
@@ -71,10 +70,9 @@ Personal.propTypes = {
 };
 
 // Ids to use for the inputs and keep them consistent
-const PERSONAL_ID = {
+const PERSONAL_IDS = {
   FIRSTNAME: 'firstname',
   LASTNAME: 'lastname',
-  FOO: 'foome',
 };
 
 /**
@@ -92,7 +90,7 @@ const PERSONAL_ID = {
 const validationCallback = (id, value) => {
   let error = null;
   switch (id) {
-    case PERSONAL_ID.FIRSTNAME:
+    case PERSONAL_IDS.FIRSTNAME:
       if (!hasValue(value)) {
         error = 'First name is required.';
       } else if (!isString(value)) {
@@ -101,7 +99,7 @@ const validationCallback = (id, value) => {
         error = 'First name should be at least 2 characters.';
       }
       break;
-    case PERSONAL_ID.LASTNAME:
+    case PERSONAL_IDS.LASTNAME:
       if (!hasValue(value)) {
         error = 'Last name is required.';
       } else if (!isString(value)) {

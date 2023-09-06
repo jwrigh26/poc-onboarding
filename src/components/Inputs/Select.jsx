@@ -20,7 +20,7 @@ import MUISelect from '@mui/material/Select';
  * a list of options.
  *
  * @param {Object} props - Props passed down from parent component
- * @param {string} props.error - Error text to display
+ * @param {string} [props.error] - Error text to display
  * @param {boolean} [props.gutter] - Whether to display a gutter below the text field.
  * @param {string} props.hint - Hint text to display
  * @param {string} props.id - Unique ID for the input

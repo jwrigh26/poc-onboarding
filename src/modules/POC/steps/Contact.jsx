@@ -16,11 +16,11 @@ export default function Contact({ index }) {
     handleChange,
     isValid,
     validationRef,
-  } = useWizardInputHandler(
+  } = useWizardInputHandler({
     index,
-    [CONTACT_IDS.EMAIL, CONTACT_IDS.PHONENUMBER],
-    validationCallback
-  );
+    ids: [CONTACT_IDS.EMAIL, CONTACT_IDS.PHONENUMBER],
+    validationCallback,
+  });
 
   return (
     <>

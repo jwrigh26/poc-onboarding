@@ -9,7 +9,7 @@ export default function WizardButtons({
   validationRef,
   isValid,
 }) {
-  const { actions, meta, state } = useWizzardContext();
+  const { actions, meta } = useWizzardContext();
   const handleBack = () => {
     const valid = isValid({ dirty: true });
     console.log(`%c${'VALID'}: ${valid}`, 'color: purple;');

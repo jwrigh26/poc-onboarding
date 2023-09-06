@@ -4,18 +4,19 @@ import { useDebounce } from 'hooks/useDebounce';
 import { hasValue } from '../helpers/utils';
 /**
  * Custom hook to handle input changes and validation inside a wizard.
- * @param {Number} step - The current step of the wizard. Note: it may  not always be the active step.
- * @param {Array} ids - Array of input IDs to validate.
- * @param {Function} validationCallback - Function that takes an input id and its value as arguments,
- *                                        returns an error message string if the input is invalid,
- *                                        or null if the input is valid.
+ * @param {Object} props                        - The props object.
+ * @param {Number} [props.index]                - The current step of the wizard (not being used currently).
+ * @param {Array} [props.ids]                   - Array of input IDs to validate.
+ * @param {Function} [props.validationCallback] - Function that takes an input id and its value as arguments,
+ *                                                returns an error message string if the input is invalid,
+ *                                                or null if the input is valid.
  * @returns {Object} - Returns an object containing:
  *                      - disabled (boolean): Flag to indicate if the form is not valid.
  *                      - getError (function): Function to get the error message for a given id.
  *                      - handleBlur (function): Function to handle the onBlur event.
  *                      - handleChange (function): Function to handle the onChange event.
  *                      - isValid (function): Function to validate the entire form.
- *                     - validationRef (object): React ref object pointing to the input elements.
+ *                      - validationRef (object): React ref object pointing to the input elements.
  *
  * This hook makes use of a context to share state across Wizard steps.
  * The hook maintains two pieces of state, `errors` and `dirty`. The `errors` object keeps
@@ -25,7 +26,7 @@ import { hasValue } from '../helpers/utils';
  *
  * The hook leverages memoization (useCallback) and debouncing for performance optimization.
  */
-export const useWizardInputHandler = (step, ids, validationCallback) => {
+export const useWizardInputHandler = ({ ids, validationCallback }) => {
   // - A React ref object pointing to the input elements.
   const validationRef = useRef({});
   const { actions, state } = useWizzardContext();
@@ -72,11 +73,13 @@ export const useWizardInputHandler = (step, ids, validationCallback) => {
     // hasValidationError will be true if at least one input has an error
     // Down below we return the opposite of hasValidationError
     // To say the form is valid if no errors are found
+    console.log('isValid', { ids, dirty });
 
     let filteredIds = ids;
 
     if (dirty) {
       filteredIds = ids.filter((id) => dirty[id]);
+      console.log('isValid filteredIds', filteredIds);
     }
 
     // Finds the first input that has an error from the validationRef object of inputs
